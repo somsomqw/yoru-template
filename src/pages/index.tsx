@@ -4,6 +4,8 @@ import Header from "../components/Header";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
+  const { data } = trpc.auth.getSession.useQuery(undefined, { suspense: true });
+  console.log(data);
   return (
     <div>
       <Head>

@@ -56,7 +56,7 @@ const Signup: React.FC<Props> = () => {
             />
             <Spacer h="5" />
             <Button className="w-full" colorScheme="blue" type="submit">
-              SIGN IN
+              SIGN UP
             </Button>
           </FormControl>
           <Spacer h="4" />

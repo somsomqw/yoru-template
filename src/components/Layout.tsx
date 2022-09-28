@@ -10,7 +10,7 @@ type Props = {
 
 const Layout: React.FC<Props> = ({ children }) => {
   const router = useRouter();
-  if (router.pathname === "/signup")
+  if (router.pathname === "/signup" || router.pathname === "/signin")
     return (
       <div>
         {children}
