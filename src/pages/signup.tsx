@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -12,17 +12,16 @@ import { trpc } from "../utils/trpc";
 
 type Props = {};
 
-const signup: React.FC<Props> = () => {
+const Signup: React.FC<Props> = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
-  const { mutate, isLoading, error } = trpc.user.regist.useMutation({
+  const { mutate, isLoading } = trpc.user.regist.useMutation({
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
     onSuccess: () => {
       console.log("success");
     },
   });
-
-  useEffect(() => {
-    setErrorMessage(error?.message);
-  }, [error]);
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -70,4 +69,4 @@ const signup: React.FC<Props> = () => {
   );
 };
 
-export default signup;
+export default Signup;
