@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -14,14 +14,15 @@ type Props = {};
 
 const signup: React.FC<Props> = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
-  const { mutate, isLoading } = trpc.user.regist.useMutation({
-    onError: (error) => {
-      setErrorMessage(error.message);
-    },
+  const { mutate, isLoading, error } = trpc.user.regist.useMutation({
     onSuccess: () => {
       console.log("success");
     },
   });
+
+  useEffect(() => {
+    setErrorMessage(error?.message);
+  }, [error]);
 
   const onSubmit = (e: any) => {
     e.preventDefault();
