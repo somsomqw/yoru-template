@@ -1,5 +1,9 @@
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
+import admin from "firebase-admin";
+import { cert } from "firebase-admin/app";
+const { getFirestore } = require("firebase-admin/firestore");
+const serviceAccount = require("../../guchirou-6a558-firebase-adminsdk-6b5dp-a9672f1892.json");
 
 export async function createContext(opts?: trpcNext.CreateNextContextOptions) {
   // Create your context based on the request object
@@ -13,9 +17,16 @@ export async function createContext(opts?: trpcNext.CreateNextContextOptions) {
   //   return null;
   // }
   // const user = await getUserFromHeader();
+  if (admin.apps.length === 0) {
+    admin.initializeApp({
+      credential: cert(serviceAccount),
+    });
+  }
+  const db = getFirestore();
   return {
     req: opts?.req,
     res: opts?.res,
+    db,
   };
 }
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;
