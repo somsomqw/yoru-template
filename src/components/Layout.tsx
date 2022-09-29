@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import Category from "./Category";
 import Footer from "./Footer";
 import Header from "./Header";
+import AdminLayout from "../components/admin/Layout";
 
 type Props = {
   children: ReactNode;
@@ -17,7 +18,8 @@ const Layout: React.FC<Props> = ({ children }) => {
         <Footer />
       </div>
     );
-  if (router.pathname === "/admin") return <div>{children}</div>;
+  if (router.pathname.includes("admin"))
+    return <AdminLayout>{children}</AdminLayout>;
   return (
     <div>
       <Header />
