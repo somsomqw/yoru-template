@@ -1,6 +1,6 @@
 import { t } from "../trpc";
 import * as trpc from "@trpc/server";
-import { registUserSchema } from "../../schema/user.schema";
+import { loginUserSchema, registUserSchema } from "../../schema/user.schema";
 
 export const userRouter = t.router({
   regist: t.procedure

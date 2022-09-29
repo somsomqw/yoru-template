@@ -6,5 +6,5 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 });
 
 export const authRouter = t.router({
-  getSession: t.procedure.query(({ ctx }) => ctx.session),
+  // getSession: t.procedure.query(({ ctx }) => ctx.session),
 });

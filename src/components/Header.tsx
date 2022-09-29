@@ -6,6 +6,7 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 import { BiSearch, BiUser, BiCart } from "react-icons/bi";
@@ -13,6 +14,7 @@ import { BiSearch, BiUser, BiCart } from "react-icons/bi";
 type Props = {};
 
 const Header: React.FC<Props> = () => {
+  const session = useSession();
   return (
     <div className="fixed w-full pl-4 pr-4 h-16 flex justify-between shadow-md bg-gray-200">
       <div className="h-full flex items-center">
@@ -37,12 +39,26 @@ const Header: React.FC<Props> = () => {
       <div className="h-full flex items-center">
         <ButtonGroup>
           <IconButton icon={<BiCart />} aria-label="cart" />
-          <IconButton icon={<BiUser />} aria-label="profile" />
-          <Button>SIGN IN</Button>
-          <Button>SIGN UP</Button>
-          <Link href="/admin">
-            <Button>ADMIN</Button>
-          </Link>
+          {session.status === "authenticated" ? (
+            <>
+              <IconButton icon={<BiUser />} aria-label="profile" />
+              <Button onClick={() => signOut()}>SIGN OUT</Button>
+            </>
+          ) : (
+            <>
+              <Link href="/signin">
+                <Button>SIGN IN</Button>
+              </Link>
+              <Link href="/signup">
+                <Button>SIGN UP</Button>
+              </Link>
+            </>
+          )}
+          {session.data?.isAdmin ? (
+            <Link href="/admin">
+              <Button>ADMIN</Button>
+            </Link>
+          ) : null}
         </ButtonGroup>
       </div>
     </div>
