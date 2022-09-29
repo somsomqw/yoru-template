@@ -1,6 +1,4 @@
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import Header from "./Header";
 import Sidemenu from "./Sidemenu";
 

@@ -24,7 +24,6 @@ const Layout: React.FC<Props> = ({ children }) => {
     <div>
       <Header />
       <div className="min-h-screen pt-16 pl-52 pr-52 flex bg-gray-50">
-        <Category />
         {children}
       </div>
       <Footer />

@@ -14,7 +14,7 @@ export const userRouter = t.router({
 
       if (!docRef.empty) {
         throw new trpc.TRPCError({
-          code: "BAD_REQUEST",
+          code: "CONFLICT",
           message: "This email is already existed",
         });
       } else {

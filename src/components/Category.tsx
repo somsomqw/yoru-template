@@ -2,6 +2,7 @@ import { Icon, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { ReactNode } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { trpc } from "../utils/trpc";
 
 type Props = {};
 type ItemProps = {
@@ -21,14 +22,14 @@ const Item: React.FC<ItemProps> = ({ children, to }) => {
 };
 
 const Category: React.FC<Props> = () => {
+  const { data } = trpc.category.get.useQuery();
   return (
     <div className="w-56 flex flex-col">
-      <Item to="/categories">category a</Item>
-      <Item to="/categories">category a</Item>
-      <Item to="/categories">category a</Item>
-      <Item to="/categories">category a</Item>
-      <Item to="/categories">category a</Item>
-      <Item to="/categories">category a</Item>
+      {data?.categories?.map((category: any, index: number) => (
+        <Item key={index} to={`/categories/${category.name}`}>
+          {category.name}
+        </Item>
+      ))}
     </div>
   );
 };

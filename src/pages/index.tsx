@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import Category from "../components/Category";
 
 const Home: NextPage = () => {
   return (
@@ -10,7 +11,10 @@ const Home: NextPage = () => {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1 className="text-red-500">hello</h1>
+      <div className="flex">
+        <Category />
+        <h1 className="text-red-500">hello</h1>
+      </div>
     </div>
   );
 };
