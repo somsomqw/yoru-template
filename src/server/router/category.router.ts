@@ -2,6 +2,7 @@ import { t } from "../trpc";
 import * as trpc from "@trpc/server";
 import {
   deleteCategorySchema,
+  editCategorySchema,
   registCategorySchema,
 } from "../../schema/category.schema";
 
@@ -57,6 +58,22 @@ export const categoryRouter = t.router({
         });
       } else {
         await targetCategory.docs[0].ref.delete();
+      }
+    }),
+  edit: t.procedure
+    .input(editCategorySchema)
+    .mutation(async ({ ctx, input }) => {
+      const targetCategory = await ctx.db
+        .collection(COLLECTION_NAME)
+        .where("name", "==", input.targetName)
+        .get();
+      if (targetCategory.empty) {
+        throw new trpc.TRPCError({
+          code: "CONFLICT",
+          message: "This category is already deleted",
+        });
+      } else {
+        await targetCategory.docs[0].ref.update({ name: input.newName });
       }
     }),
 });

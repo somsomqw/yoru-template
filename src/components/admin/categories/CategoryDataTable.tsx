@@ -1,46 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   Button,
   ButtonGroup,
-  useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { trpc } from "../../../utils/trpc";
+import DeleteModal from "./DeleteModal";
+import EditModal from "./EditModal";
 
 type Props = {
   categories?: Array<{ name: string }>;
-  refetch: any;
+  refetch: () => void;
 };
 
 const DataTable: React.FC<Props> = ({ categories, refetch }) => {
-  const toast = useToast();
-  const { mutate: deleteMutate } = trpc.category.delete.useMutation({
-    onError: () => {
-      toast({
-        title: "Failed delete.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    },
-    onSuccess: () => {
-      toast({
-        title: "Category deleted.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      refetch();
-    },
-  });
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: editOpen,
+    onOpen: editOnOpen,
+    onClose: editOnClose,
+  } = useDisclosure();
+
+  const [selected, setSelected] = useState<string>("");
+
   return (
     <div>
       <TableContainer>
@@ -59,12 +47,22 @@ const DataTable: React.FC<Props> = ({ categories, refetch }) => {
                 <Td>{category.name}</Td>
                 <Td isNumeric>
                   <ButtonGroup>
-                    <Button size="sm" colorScheme="teal">
+                    <Button
+                      size="sm"
+                      colorScheme="teal"
+                      onClick={() => {
+                        setSelected(category.name);
+                        editOnOpen();
+                      }}
+                    >
                       EDIT
                     </Button>
                     <Button
                       size="sm"
-                      onClick={() => deleteMutate({ name: category.name })}
+                      onClick={() => {
+                        setSelected(category.name);
+                        onOpen();
+                      }}
                     >
                       DELETE
                     </Button>
@@ -75,6 +73,18 @@ const DataTable: React.FC<Props> = ({ categories, refetch }) => {
           </Tbody>
         </Table>
       </TableContainer>
+      <EditModal
+        isOpen={editOpen}
+        onClose={editOnClose}
+        selected={selected}
+        refetch={refetch}
+      />
+      <DeleteModal
+        isOpen={isOpen}
+        onClose={onClose}
+        selected={selected}
+        refetch={refetch}
+      />
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  Button,
+  useToast,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -7,57 +9,62 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Button,
   FormControl,
   FormLabel,
   Input,
   Spacer,
-  useToast,
 } from "@chakra-ui/react";
 import { trpc } from "../../../utils/trpc";
 
-type Props = {
+type EditModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  selected: string;
+  refetch: () => void;
 };
 
-const AddModal: React.FC<Props> = ({ isOpen, onClose }) => {
+const EditModal: React.FC<EditModalProps> = ({
+  isOpen,
+  onClose,
+  selected,
+  refetch,
+}) => {
   const toast = useToast();
-
-  const { mutate } = trpc.category.regist.useMutation({
-    onError: (error) => {
+  const { mutate: editMutate } = trpc.category.edit.useMutation({
+    onError: () => {
       toast({
-        title: "Failed create.",
+        title: "Failed edit.",
         status: "error",
-        description: error.message,
         duration: 5000,
         isClosable: true,
       });
     },
     onSuccess: () => {
       toast({
-        title: "New category created.",
+        title: "Category edited.",
         status: "success",
         duration: 5000,
         isClosable: true,
       });
       onClose();
+      refetch();
     },
   });
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    const name = e.target.categoryName.value;
-    mutate({ name });
+    const newName = e.target.categoryName.value;
+    editMutate({ targetName: selected, newName });
   };
+
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
+          <ModalHeader>Edit Category</ModalHeader>
+          <ModalCloseButton />
           <form method="POST" onSubmit={onSubmit}>
-            <ModalHeader>Create new category</ModalHeader>
-            <ModalCloseButton />
             <ModalBody>
               <FormControl>
                 <FormLabel>Category name</FormLabel>
@@ -65,6 +72,7 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   id="category-name"
                   name="categoryName"
                   type="text"
+                  defaultValue={selected}
                   required
                 />
                 <Spacer h="5" />
@@ -72,10 +80,10 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose }) => {
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="blue" mr={3} onClick={onClose}>
-                Close
+                CLOSE
               </Button>
               <Button variant="ghost" type="submit">
-                CREATE
+                EDIT
               </Button>
             </ModalFooter>
           </form>
@@ -85,4 +93,4 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose }) => {
   );
 };
 
-export default AddModal;
+export default EditModal;
