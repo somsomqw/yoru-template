@@ -1,11 +1,4 @@
-import {
-  Button,
-  ButtonGroup,
-  FormControl,
-  IconButton,
-  Input,
-  Text,
-} from "@chakra-ui/react";
+import { Button, ButtonGroup, IconButton, Input, Text } from "@chakra-ui/react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
