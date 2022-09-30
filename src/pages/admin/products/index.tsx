@@ -1,11 +1,33 @@
+import { Button, Spacer, Text, useDisclosure } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
+import AddModal from "../../../components/admin/products/AddModal";
+import { trpc } from "../../../utils/trpc";
 
 type Props = {};
 
 const Products = (props: Props) => {
-  return <div>Products</div>;
+  const { data, error } = trpc.category.get.useQuery();
+  const { isOpen, onOpen, onClose } = useDisclosure({
+    onClose: () => {},
+  });
+  return (
+    <div className="p-10">
+      <div className="flex justify-between">
+        <Text className="font-bold text-3xl">Products</Text>
+        <Button colorScheme="teal" onClick={onOpen}>
+          ADD PRODUCT
+        </Button>
+      </div>
+      <Spacer h="10" />
+      <AddModal
+        isOpen={isOpen}
+        onClose={onClose}
+        categories={data?.categories}
+      />
+    </div>
+  );
 };
 
 export default Products;

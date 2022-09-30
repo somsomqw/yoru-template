@@ -21,7 +21,7 @@ export const categoryRouter = t.router({
         .where("name", "==", input.name)
         .get();
 
-      //if collection is existed and same name is not exsisted
+      //if collection is existed and same name is exsisted
       if (!categoryCollection.empty && !docRef.empty) {
         throw new trpc.TRPCError({
           code: "CONFLICT",

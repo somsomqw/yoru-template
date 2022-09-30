@@ -3,7 +3,6 @@ import * as trpcNext from "@trpc/server/adapters/next";
 import admin from "firebase-admin";
 // import { authOptions } from "../pages/api/auth/[...nextauth]";
 import { cert } from "firebase-admin/app";
-import { unstable_getServerSession } from "next-auth";
 const { getFirestore } = require("firebase-admin/firestore");
 const serviceAccount = require("../../guchirou-6a558-firebase-adminsdk-6b5dp-a9672f1892.json");
 
@@ -28,13 +27,10 @@ export async function createContext(opts?: trpcNext.CreateNextContextOptions) {
   }
   const db = getFirestore();
 
-  // const session =
-  //   req && res && (await unstable_getServerSession(req, res, authOptions));
   return {
     req,
     res,
     db,
-    // session,
   };
 }
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;
