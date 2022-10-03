@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { TableSingleProduct } from "../../../schema/product.schema";
 import DeleteModal from "./DeleteModal";
-import EditModal from "./EditModal";
 import Link from "next/link";
 
 type Props = {
