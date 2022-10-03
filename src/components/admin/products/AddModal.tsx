@@ -37,16 +37,31 @@ type Props = {
   categories: Array<{ name: string }> | undefined;
 };
 
+const formDataInit = {
+  id: "",
+  title: "",
+  description: "",
+  discount: false,
+  discountRate: null,
+  thumbnail: null,
+  images: null,
+  price: 0,
+  quantity: 0,
+  category: "",
+};
+const optionsTextInit = { size: "", color: "" };
+const optionsInit = { sizes: [], colors: [] };
+
 const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
   const toast = useToast();
   const [optionsText, setOptionsText] = useState<{
     size: string;
     color: string;
-  }>({ size: "", color: "" });
+  }>(optionsTextInit);
   const [options, setOptions] = useState<{
     sizes: string[] | [];
     colors: string[] | [];
-  }>({ sizes: [], colors: [] });
+  }>(optionsInit);
   const [formData, setFormData] = useState<{
     id: string;
     title: string;
@@ -58,18 +73,7 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
     price: number;
     quantity: number;
     category: string;
-  }>({
-    id: "",
-    title: "",
-    description: "",
-    discount: false,
-    discountRate: null,
-    thumbnail: null,
-    images: null,
-    price: 0,
-    quantity: 0,
-    category: "",
-  });
+  }>(formDataInit);
 
   const { mutate } = trpc.product.regist.useMutation({
     onError: (error) => {
@@ -89,6 +93,9 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
         isClosable: true,
       });
       onClose();
+      setFormData(formDataInit);
+      setOptions(optionsInit);
+      setOptionsText(optionsTextInit);
     },
   });
 
@@ -180,7 +187,7 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      [e.target.name]: e.target.value,
+                      [e.target.name]: Number(e.target.value),
                     }))
                   }
                 >
@@ -246,6 +253,7 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
                       [e.target.name]: e.target.value,
                     }))
                   }
+                  required
                 >
                   {categories?.map((category, index) => (
                     <option key={index} value={category.name}>
@@ -273,8 +281,8 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
                         minHeight="10"
                       >
                         <VStack spacing={4}>
-                          {options.sizes.map((size) => (
-                            <Tag size="sm">
+                          {options.sizes.map((size, index) => (
+                            <Tag key={index} size="sm">
                               <TagLabel>{size}</TagLabel>
                               <TagCloseButton
                                 onClick={() =>
@@ -334,8 +342,8 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
                         minHeight="10"
                       >
                         <VStack spacing={4}>
-                          {options.colors.map((color) => (
-                            <Tag size="sm">
+                          {options.colors.map((color, index) => (
+                            <Tag key={index} size="sm">
                               <TagLabel>{color}</TagLabel>
                               <TagCloseButton
                                 onClick={() =>

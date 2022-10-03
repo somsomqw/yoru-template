@@ -3,14 +3,18 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
 import AddModal from "../../../components/admin/products/AddModal";
+import ProductDataTable from "../../../components/admin/products/ProductDataTable";
 import { trpc } from "../../../utils/trpc";
 
 type Props = {};
 
 const Products = (props: Props) => {
-  const { data, error } = trpc.category.get.useQuery();
+  const { data: categoriesData } = trpc.category.get.useQuery();
+  const { data, refetch } = trpc.product.get.useQuery();
   const { isOpen, onOpen, onClose } = useDisclosure({
-    onClose: () => {},
+    onClose: () => {
+      refetch();
+    },
   });
   return (
     <div className="p-10">
@@ -21,10 +25,15 @@ const Products = (props: Props) => {
         </Button>
       </div>
       <Spacer h="10" />
+      <ProductDataTable
+        products={data?.products}
+        refetch={refetch}
+        categories={categoriesData?.categories}
+      />
       <AddModal
         isOpen={isOpen}
         onClose={onClose}
-        categories={data?.categories}
+        categories={categoriesData?.categories}
       />
     </div>
   );
