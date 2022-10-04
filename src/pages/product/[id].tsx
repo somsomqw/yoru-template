@@ -1,15 +1,41 @@
-import { Button, Center, Select, Text, VStack } from "@chakra-ui/react";
-import { GetServerSidePropsContext } from "next";
+import {
+  Button,
+  Center,
+  Select,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { Session } from "next-auth";
+import { getSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect } from "react";
+import { setLocalStorage } from "../../utils/storage";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
   id: string;
+  session: Session;
 };
 
-const ProductDetail: React.FC<Props> = ({ id }) => {
+const ProductDetail: React.FC<Props> = ({ id, session }) => {
+  const toast = useToast();
   const { data } = trpc.product.getSingle.useQuery({ id });
+
+  const onClickAddCart = () => {
+    if (session) {
+    } else {
+      const result = setLocalStorage<string>("carts", id);
+      toast({
+        title: result.message,
+        status: result.status,
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <div className="p-10 flex">
       <div>
@@ -51,7 +77,11 @@ const ProductDetail: React.FC<Props> = ({ id }) => {
           </div>
         )}
         <VStack spacing={4}>
-          <Button className="w-full" colorScheme="teal">
+          <Button
+            className="w-full"
+            colorScheme="teal"
+            onClick={onClickAddCart}
+          >
             ADD CART
           </Button>
           <Button className="w-full" colorScheme="teal">
@@ -65,11 +95,15 @@ const ProductDetail: React.FC<Props> = ({ id }) => {
 
 export default ProductDetail;
 
-export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps = async (
+  ctx: GetServerSidePropsContext
+) => {
   const id = ctx.params?.id;
+  const session = await getSession(ctx);
   return {
     props: {
       id,
+      session,
     },
   };
 };
