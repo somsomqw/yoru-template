@@ -9,10 +9,12 @@ type Props = {};
 const Header: React.FC<Props> = () => {
   const session = useSession();
   return (
-    <div className="fixed w-full pl-4 pr-4 h-16 flex justify-between shadow-md bg-gray-200">
-      <div className="h-full flex items-center">
-        <Text className="font-bold text-lg">TEMPLATE</Text>
-      </div>
+    <div className="fixed w-full pl-4 pr-4 h-16 flex justify-between shadow-md bg-gray-200 z-50">
+      <Link href="/">
+        <div className="h-full flex items-center cursor-pointer">
+          <Text className="font-bold text-lg">TEMPLATE</Text>
+        </div>
+      </Link>
       <form className="h-full flex items-center">
         <Input
           type="text"

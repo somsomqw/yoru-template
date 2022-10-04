@@ -26,7 +26,7 @@ const Category: React.FC<Props> = () => {
   return (
     <div className="w-56 flex flex-col">
       {data?.categories?.map((category: any, index: number) => (
-        <Item key={index} to={`/categories/${category.name}`}>
+        <Item key={index} to={`/category/${category.name}`}>
           {category.name}
         </Item>
       ))}
