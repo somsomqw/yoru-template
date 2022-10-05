@@ -1,12 +1,21 @@
-import { Button, ButtonGroup, IconButton, Input, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  IconButton,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 import { BiSearch, BiUser, BiCart } from "react-icons/bi";
+import { useCartCounter } from "../context/CartContext";
 
 type Props = {};
 
 const Header: React.FC<Props> = () => {
+  const [count] = useCartCounter();
   const session = useSession();
   return (
     <div className="fixed w-full pl-4 pr-4 h-16 flex justify-between shadow-md bg-gray-200 z-50">
@@ -33,7 +42,18 @@ const Header: React.FC<Props> = () => {
       </form>
       <div className="h-full flex items-center">
         <ButtonGroup>
-          <IconButton icon={<BiCart />} aria-label="cart" />
+          <div className="relative">
+            <IconButton icon={<BiCart />} aria-label="cart" />
+            {count && count > 0 ? (
+              <Badge
+                colorScheme="red"
+                rounded="full"
+                className="absolute -top-1 -right-1 z-50"
+              >
+                {count}
+              </Badge>
+            ) : null}
+          </div>
           {session.status === "authenticated" ? (
             <>
               <IconButton icon={<BiUser />} aria-label="profile" />

@@ -11,18 +11,11 @@ export const setLocalStorage = <T>(
     const currentCarts = localStorage.getItem("carts");
     if (currentCarts) {
       const parsedCurrentCarts: T[] = JSON.parse(currentCarts);
-      const sameValueCarts = parsedCurrentCarts.filter((id) => id !== value);
-      if (sameValueCarts.length !== 0) {
-        const newCarts = [...parsedCurrentCarts, value];
-        localStorage.setItem("carts", JSON.stringify(newCarts));
-        return {
-          status: "success",
-          message: "Product added in cart",
-        };
-      }
+      const newCarts = [...parsedCurrentCarts, value];
+      localStorage.setItem("carts", JSON.stringify(newCarts));
       return {
-        status: "error",
-        message: "This product is already existed in cart",
+        status: "success",
+        message: "Product added in cart",
       };
     } else {
       const newCarts = [value];

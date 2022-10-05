@@ -18,6 +18,7 @@ const Home: NextPage = () => {
         <div>
           {data?.products?.map((product: any) => (
             <ProductCard
+              key={product.id}
               id={product.id as string}
               url="https://i.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI"
               title={product.title as string}
