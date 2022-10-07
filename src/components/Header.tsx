@@ -43,7 +43,9 @@ const Header: React.FC<Props> = () => {
       <div className="h-full flex items-center">
         <ButtonGroup>
           <div className="relative">
-            <IconButton icon={<BiCart />} aria-label="cart" />
+            <Link href="/cart">
+              <IconButton icon={<BiCart />} aria-label="cart" />
+            </Link>
             {count && count > 0 ? (
               <Badge
                 colorScheme="red"

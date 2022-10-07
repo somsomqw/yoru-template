@@ -20,10 +20,18 @@ const Layout: React.FC<Props> = ({ children }) => {
     );
   if (router.pathname.includes("admin"))
     return <AdminLayout>{children}</AdminLayout>;
+  if (router.pathname === "/cart")
+    return (
+      <div>
+        <Header />
+        <div className="min-h-screen p-16">{children}</div>
+        <Footer />
+      </div>
+    );
   return (
     <div>
       <Header />
-      <div className="min-h-screen pt-16 pl-52 pr-52 flex bg-gray-50">
+      <div className="min-h-screen pt-16 pl-40 pr-40 bg-gray-50">
         {children}
       </div>
       <Footer />

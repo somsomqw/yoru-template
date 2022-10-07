@@ -11,6 +11,7 @@ import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import Category from "../../components/Category";
 import Counter from "../../components/combination/Counter";
 import { useCartCounter } from "../../context/CartContext";
 import { setLocalStorage } from "../../utils/storage";
@@ -41,11 +42,13 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
           size?: string;
           color?: string;
           quantity: number;
+          title: string;
         }>("carts", {
           id,
           size: options?.size,
           color: options?.color,
           quantity: options.quantity,
+          title: data?.product.title,
         });
         toast({
           title: result.message,
@@ -57,9 +60,10 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
       }
     }
   };
-
+  console.log(data?.product.color);
   return (
     <div className="p-10 flex">
+      <Category />
       <div>
         <Image
           src="https://i.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI"
@@ -75,7 +79,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
         <div className="p-12 w-128">
           <Text className="text-2xl font-bold mb-2">{data?.product.title}</Text>
           <Text className="text-2xl font-bold">￥{data?.product.price}</Text>
-          {data?.product.size && (
+          {data?.product.size && data.product.size.length > 0 && (
             <div>
               <Text>Size</Text>
               <Select
@@ -93,7 +97,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
               </Select>
             </div>
           )}
-          {data?.product.color && (
+          {data?.product.color && data.product.color.length > 0 && (
             <div>
               <Text>Color</Text>
               <Select

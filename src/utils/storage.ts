@@ -1,4 +1,4 @@
-export type LocalStorageType = "carts";
+export type LocalStorageType = "carts" | "newCarts";
 export type OutputType = {
   status: "success" | "error";
   message: string;
@@ -25,6 +25,8 @@ export const setLocalStorage = <T>(
         message: "Product added in cart",
       };
     }
+  } else if (id === "newCarts") {
+    localStorage.setItem("carts", JSON.stringify(value));
   }
   return {
     status: "error",
