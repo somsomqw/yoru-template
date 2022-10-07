@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getFirestore } from "firebase-admin/firestore";
+import { prisma } from "../../../utils/prisma";
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -21,17 +22,17 @@ export default NextAuth({
         const email: string = req.body?.email;
         const password: string = req.body?.password;
         if (email && password) {
-          const db = getFirestore();
-          const docRef = await db
-            .collection("users")
-            .where("email", "==", email)
-            .where("password", "==", password)
-            .get();
-          if (docRef.empty) {
-            return null;
-          } else {
-            const user = docRef.docs[0].data();
+          const user = await prisma.user.findFirst({
+            where: {
+              email,
+              password,
+            },
+          });
+          if (user) {
+            console.log(user);
             return user;
+          } else {
+            return null;
           }
         }
         return null;
@@ -51,13 +52,20 @@ export default NextAuth({
       return token;
     },
     async session({ session, token, user }) {
-      const db = getFirestore();
-      const docRef = await db
-        .collection("users")
-        .where("email", "==", session.user?.email)
-        .get();
-      const { isAdmin } = docRef.docs[0].data();
-      session.isAdmin = isAdmin ?? false;
+      const email = session.user?.email;
+      let isAdmin = false;
+      if (email) {
+        const targetUser = await prisma.user.findUnique({
+          where: {
+            email,
+          },
+        });
+        if (targetUser) {
+          isAdmin = targetUser.isAdmin;
+        }
+      }
+
+      session.isAdmin = isAdmin;
       session.accessToken = token.accessToken;
       return session;
     },
