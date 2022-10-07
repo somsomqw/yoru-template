@@ -5,6 +5,7 @@ import {
   editCategorySchema,
   registCategorySchema,
 } from "../../schema/category.schema";
+import prisma from "../../utils/prisma";
 
 const COLLECTION_NAME = "categories";
 
@@ -12,29 +13,46 @@ export const categoryRouter = t.router({
   regist: t.procedure
     .input(registCategorySchema)
     .mutation(async ({ ctx, input }) => {
-      const categoryCollection = await ctx.db
-        .collection(COLLECTION_NAME)
-        .limit(1)
-        .get();
-      const docRef = await ctx.db
-        .collection(COLLECTION_NAME)
-        .where("name", "==", input.name)
-        .get();
+      // const categoryCollection = await ctx.db
+      //   .collection(COLLECTION_NAME)
+      //   .limit(1)
+      //   .get();
+      // const docRef = await ctx.db
+      //   .collection(COLLECTION_NAME)
+      //   .where("name", "==", input.name)
+      //   .get();
 
-      //if collection is existed and same name is exsisted
-      if (!categoryCollection.empty && !docRef.empty) {
+      // //if collection is existed and same name is exsisted
+      // if (!categoryCollection.empty && !docRef.empty) {
+      //   throw new trpc.TRPCError({
+      //     code: "CONFLICT",
+      //     message: "This category is already existed",
+      //   });
+      // } else {
+      //   const insertData = {
+      //     name: input.name,
+      //   };
+      //   const res = await ctx.db
+      //     .collection(COLLECTION_NAME)
+      //     .doc()
+      //     .set(insertData);
+      // }
+      const isExistCategory = await prisma.category.findUnique({
+        where: {
+          name: input.name,
+        },
+      });
+      if (isExistCategory) {
         throw new trpc.TRPCError({
           code: "CONFLICT",
           message: "This category is already existed",
         });
       } else {
-        const insertData = {
-          name: input.name,
-        };
-        const res = await ctx.db
-          .collection(COLLECTION_NAME)
-          .doc()
-          .set(insertData);
+        await prisma.category.create({
+          data: {
+            name: input.name,
+          },
+        });
       }
     }),
   get: t.procedure.query(async ({ ctx }) => {

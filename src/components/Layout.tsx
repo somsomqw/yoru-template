@@ -28,12 +28,20 @@ const Layout: React.FC<Props> = ({ children }) => {
         <Footer />
       </div>
     );
+  if (router.pathname === "/")
+    return (
+      <div>
+        <Header />
+        <div className="min-h-screen pt-16 pl-40 pr-40 bg-gray-50">
+          {children}
+        </div>
+        <Footer />
+      </div>
+    );
   return (
     <div>
       <Header />
-      <div className="min-h-screen pt-16 pl-40 pr-40 bg-gray-50">
-        {children}
-      </div>
+      <div className="min-h-screen pt-16 bg-gray-50">{children}</div>
       <Footer />
     </div>
   );
