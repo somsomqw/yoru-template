@@ -61,7 +61,7 @@ export default NextAuth({
           },
         });
         if (targetUser) {
-          // isAdmin = targetUser.isAdmin;
+          isAdmin = targetUser.isAdmin;
         }
       }
 
