@@ -5,7 +5,7 @@ import {
   editCategorySchema,
   registCategorySchema,
 } from "../../schema/category.schema";
-import prisma from "../../utils/prisma";
+import { prisma } from "../../utils/prisma";
 
 const COLLECTION_NAME = "categories";
 

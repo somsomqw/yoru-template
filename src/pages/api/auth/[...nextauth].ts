@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getFirestore } from "firebase-admin/firestore";
-import prisma from "../../../utils/prisma";
+import { prisma } from "../../../utils/prisma";
 
 export default NextAuth({
   // Configure one or more authentication providers
