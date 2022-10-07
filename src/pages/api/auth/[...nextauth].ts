@@ -60,7 +60,7 @@ export default NextAuth({
             email,
           },
         });
-        user ? (isAdmin = user?.isAdmin) : (isAdmin = false);
+        user ? (isAdmin = user.isAdmin) : (isAdmin = false);
       }
 
       session.isAdmin = isAdmin;
