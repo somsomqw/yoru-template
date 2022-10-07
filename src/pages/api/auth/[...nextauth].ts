@@ -55,12 +55,14 @@ export default NextAuth({
       const email = session.user?.email;
       let isAdmin = false;
       if (email) {
-        const user = await prisma.user.findUnique({
+        const targetUser = await prisma.user.findUnique({
           where: {
             email,
           },
         });
-        user ? (isAdmin = user.isAdmin) : (isAdmin = false);
+        if (targetUser) {
+          isAdmin = targetUser.isAdmin;
+        }
       }
 
       session.isAdmin = isAdmin;
