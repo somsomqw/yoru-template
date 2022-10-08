@@ -18,13 +18,13 @@ import { setLocalStorage } from "../../utils/storage";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
-  id: string;
+  id: number;
   session: Session;
 };
 
 const ProductDetail: React.FC<Props> = ({ id, session }) => {
   const toast = useToast();
-  const { data } = trpc.product.getSingle.useQuery({ id });
+  const { data } = trpc.product.getSingle.useQuery({ id: Number(id) });
   const [, action] = useCartCounter();
   const [options, setOptions] = useState<{
     size?: string;
@@ -38,7 +38,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
       if (session) {
       } else {
         const result = setLocalStorage<{
-          id: string;
+          id: number;
           size?: string;
           color?: string;
           quantity: number;
@@ -48,7 +48,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
           size: options?.size,
           color: options?.color,
           quantity: options.quantity,
-          title: data?.product.title,
+          title: data?.title ?? "",
         });
         toast({
           title: result.message,
@@ -60,7 +60,6 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
       }
     }
   };
-  console.log(data?.product.color);
   return (
     <div className="p-10 flex">
       <Category />
@@ -72,14 +71,14 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
           layout="fixed"
         />
         <Center>
-          <Text className="w-112">{data?.product.description}</Text>
+          <Text className="w-112">{data?.description}</Text>
         </Center>
       </div>
       <form method="POST" onSubmit={onSubmit}>
         <div className="p-12 w-128">
-          <Text className="text-2xl font-bold mb-2">{data?.product.title}</Text>
-          <Text className="text-2xl font-bold">￥{data?.product.price}</Text>
-          {data?.product.size && data.product.size.length > 0 && (
+          <Text className="text-2xl font-bold mb-2">{data?.title}</Text>
+          <Text className="text-2xl font-bold">￥{data?.price}</Text>
+          {data?.size && data.size.length > 0 && (
             <div>
               <Text>Size</Text>
               <Select
@@ -89,7 +88,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
                 }
                 required
               >
-                {data.product.size.map((s: string) => (
+                {data.size.map((s: string) => (
                   <option key={s} value={s}>
                     {s}
                   </option>
@@ -97,7 +96,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
               </Select>
             </div>
           )}
-          {data?.product.color && data.product.color.length > 0 && (
+          {data?.color && data.color.length > 0 && (
             <div>
               <Text>Color</Text>
               <Select
@@ -107,7 +106,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
                 }
                 required
               >
-                {data.product.color.map((c: string) => (
+                {data.color.map((c: string) => (
                   <option key={c} value={c}>
                     {c}
                   </option>
@@ -128,7 +127,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
                     }));
                 }}
                 onIncrease={() => {
-                  if (options.quantity < data?.product.quantity)
+                  if (data?.quantity && options.quantity < data?.quantity)
                     setOptions((prev) => ({
                       ...prev,
                       quantity: prev.quantity + 1,

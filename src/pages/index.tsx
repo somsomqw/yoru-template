@@ -18,7 +18,7 @@ const Home: NextPage = () => {
       <div className="flex">
         <Category />
         <div className="flex flex-wrap gap-4">
-          {data?.products?.map((product: any) => (
+          {data?.map((product: any) => (
             <ProductCard
               key={product.id}
               id={product.id as string}
