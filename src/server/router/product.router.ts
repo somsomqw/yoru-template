@@ -20,6 +20,7 @@ export const productRouter = t.router({
         },
       });
     } catch (e) {
+      console.log(e);
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         throw new trpc.TRPCError({
           code: "INTERNAL_SERVER_ERROR",

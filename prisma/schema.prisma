@@ -15,6 +15,7 @@ model User {
   email String @unique
   password String
   isAdmin Boolean @default(false)
+  cart Cart?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -43,3 +44,20 @@ model Product {
   updatedAt DateTime @updatedAt
 }
 
+model Cart {
+  id Int @id @default(autoincrement())
+  userEmail String @unique
+  user User @relation(fields: [userEmail], references: [email])
+  products CartData[] 
+}
+
+model CartData {
+  id Int @id @default(autoincrement())
+  productId Int
+  title String
+  size String?
+  color String?
+  quantity Int
+  cartId Int
+  cart Cart @relation(fields: [cartId], references: [id])
+}

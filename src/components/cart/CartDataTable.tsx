@@ -11,33 +11,34 @@ import {
 } from "@chakra-ui/react";
 import { setLocalStorage } from "../../utils/storage";
 import { useCartCounter } from "../../context/CartContext";
+import { OutputGetCart } from "../../schema/cart.schema";
 
 type Props = {
-  carts?: CartType;
+  carts?: OutputGetCart;
 };
 
 const CartDataTable: React.FC<Props> = ({ carts }) => {
   const [count, action] = useCartCounter();
-  const [data, setData] = useState<CartType | undefined>(carts);
+  const [data, setData] = useState<OutputGetCart | undefined>(carts);
   const onClickDelete = (e: any, index: number) => {
     const localCarts = localStorage.getItem("carts");
     if (localCarts) {
-      const parsedCarts: CartType = JSON.parse(localCarts);
-      const newCarts = parsedCarts.filter((_, i) => i !== index);
-      setLocalStorage<CartType>("newCarts", newCarts);
+      const parsedCarts: OutputGetCart = JSON.parse(localCarts);
+      const newCarts = parsedCarts.products?.filter((_, i) => i !== index);
+      setLocalStorage<typeof newCarts>("newCarts", newCarts);
       action.decrease();
     }
   };
 
   useEffect(() => {
-    setData(carts);
+    setData({ products: carts?.products ?? null });
   }, [carts]);
 
   useEffect(() => {
     const localCarts = localStorage.getItem("carts");
     if (localCarts) {
-      const newCarts: CartType = JSON.parse(localCarts);
-      setData(newCarts);
+      const newCarts = JSON.parse(localCarts);
+      setData({ products: newCarts });
     }
   }, [count]);
 
@@ -55,7 +56,7 @@ const CartDataTable: React.FC<Props> = ({ carts }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {data?.map((product, index) => (
+            {data?.products?.map((product, index) => (
               <Tr key={index}>
                 <Td>
                   <span className="font-bold">{product.title}</span>

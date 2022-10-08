@@ -54,17 +54,22 @@ export default NextAuth({
     async session({ session, token, user }) {
       const email = session.user?.email;
       let isAdmin = false;
+      let cartId;
       if (email) {
         const targetUser = await prisma.user.findUnique({
           where: {
             email,
           },
+          include: {
+            cart: true,
+          },
         });
         if (targetUser) {
           isAdmin = targetUser.isAdmin;
+          cartId = targetUser.cart?.id;
         }
       }
-
+      session.cartId = cartId;
       session.isAdmin = isAdmin;
       session.accessToken = token.accessToken;
       return session;
