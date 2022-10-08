@@ -30,14 +30,14 @@ import { EditProductInput } from "../../../../schema/product.schema";
 import { useRouter } from "next/router";
 
 type Props = {
-  id: string;
+  id: number;
 };
 
 const ProductEdit: React.FC<Props> = ({ id }) => {
   const toast = useToast();
   const router = useRouter();
   const { data: categoriesData } = trpc.category.get.useQuery();
-  const { data } = trpc.product.getSingle.useQuery({ id });
+  const { data } = trpc.product.getSingle.useQuery({ id: Number(id) });
   const { mutate } = trpc.product.edit.useMutation({
     onError: (error) =>
       toast({
@@ -58,9 +58,9 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
     },
   });
   const [options, setOptions] = useState<{
-    sizes: string[];
-    colors: string[];
-  }>({ sizes: data?.product.size, colors: data?.product.color });
+    sizes?: string[];
+    colors?: string[];
+  }>({ sizes: data?.size ?? [], colors: data?.color ?? [] });
   const [optionsText, setOptionsText] = useState<{
     sizes: string;
     colors: string;
@@ -69,40 +69,37 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
     colors: "",
   });
   const [selectValue, setSelectValue] = useState<{
-    discount: boolean;
-    discountRate: number;
-    category: string;
-  }>({
-    discount: data?.product.discount,
-    discountRate: data?.product.discountRate,
-    category: data?.product.category,
-  });
+    discount?: boolean;
+    discountRate?: number | null;
+    categoryId?: number;
+  }>();
 
   useEffect(() => {
-    setOptions({ sizes: data?.product.size, colors: data?.product.color });
+    console.log(data);
+    setOptions({ sizes: data?.size, colors: data?.color });
     setSelectValue({
-      discount: data?.product.discount,
-      discountRate: data?.product.discountRate,
-      category: data?.product.category,
+      discount: data?.discount,
+      discountRate: data?.discountRate,
+      categoryId: data?.categoryId,
     });
   }, [data]);
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    const editInfo: EditProductInput = {
-      id,
+    const editInfo = {
+      id: Number(id),
       title: String(e.target.title.value) ?? "",
       description: String(e.target.description.value) ?? "",
-      discount: selectValue.discount,
-      discountRate: selectValue.discountRate,
+      discount: selectValue?.discount ?? false,
+      discountRate: selectValue?.discountRate ?? null,
       price: Number(e.target.price.value),
       quantity: Number(e.target.quantity.value),
-      category: selectValue.category,
-      size: options.sizes,
-      color: options.colors,
-      thumbnail: "",
-      images: null,
-      updatedAt: new Date().toDateString(),
+      categoryId: selectValue?.categoryId ?? 0,
+      size: options.sizes ?? [],
+      color: options.colors ?? [],
+      thumbnail:
+        "https://i.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI",
+      images: [],
     };
     mutate(editInfo);
   };
@@ -118,7 +115,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
             name="id"
             type="text"
             placeholder="please input unique id"
-            defaultValue={data?.product.id}
+            defaultValue={data?.id}
             maxLength={12}
             disabled
           />
@@ -128,7 +125,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
             name="title"
             type="text"
             maxLength={50}
-            defaultValue={data?.product.title}
+            defaultValue={data?.title}
             required
           />
           <FormLabel>Product description</FormLabel>
@@ -138,7 +135,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
             name="description"
             rows={20}
             maxLength={2000}
-            defaultValue={data?.product.description}
+            defaultValue={data?.description}
             required
           />
           <Spacer h="5" />
@@ -146,7 +143,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
           <RadioGroup
             id="product-productDiscount"
             name="discount"
-            value={selectValue.discount ? "on" : "off"}
+            value={selectValue?.discount ? "on" : "off"}
             onChange={(value) =>
               setSelectValue((prev) => ({
                 ...prev,
@@ -165,7 +162,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
             id="product-discount-rate"
             name="discountRate"
             placeholder="Select rate"
-            value={selectValue.discountRate}
+            value={selectValue?.discountRate ?? ""}
             onChange={(e) =>
               setSelectValue((prev) => ({
                 ...prev,
@@ -200,7 +197,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
             name="price"
             type="number"
             placeholder="3500"
-            defaultValue={data?.product.price}
+            defaultValue={data?.price}
             required
           />
           <Spacer h="5" />
@@ -210,7 +207,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
             name="quantity"
             type="number"
             placeholder="20"
-            defaultValue={data?.product.quantity}
+            defaultValue={data?.quantity}
             required
           />
           <Spacer h="5" />
@@ -219,14 +216,17 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
             id="product-category"
             name="category"
             placeholder="Select category"
-            value={selectValue.category}
+            value={selectValue?.categoryId}
             onChange={(e) =>
-              setSelectValue((prev) => ({ ...prev, category: e.target.value }))
+              setSelectValue((prev) => ({
+                ...prev,
+                categoryId: Number(e.target.value),
+              }))
             }
             required
           >
-            {categoriesData?.categories.map((category: any) => (
-              <option key={category.name} value={category.name}>
+            {categoriesData?.map((category) => (
+              <option key={category.id} value={category.id}>
                 {category.name}
               </option>
             ))}
@@ -256,7 +256,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
                       <TagCloseButton
                         onClick={() =>
                           setOptions((prev) => {
-                            const newOptions = prev.sizes.filter(
+                            const newOptions = prev.sizes?.filter(
                               (s) => s !== size
                             );
                             return { ...prev, sizes: newOptions };
@@ -281,10 +281,16 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
                   <Button
                     size="sm"
                     onClick={() =>
-                      setOptions((prev) => ({
-                        ...prev,
-                        sizes: [...prev.sizes, optionsText.sizes],
-                      }))
+                      setOptions((prev) => {
+                        if (prev.sizes) {
+                          return {
+                            ...prev,
+                            sizes: [...prev.sizes, optionsText.sizes],
+                          };
+                        } else {
+                          return { ...prev };
+                        }
+                      })
                     }
                   >
                     ADD
@@ -313,7 +319,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
                       <TagCloseButton
                         onClick={() =>
                           setOptions((prev) => {
-                            const newOptions = prev.colors.filter(
+                            const newOptions = prev.colors?.filter(
                               (c) => c !== color
                             );
                             return { ...prev, colors: newOptions };
@@ -338,10 +344,16 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
                   <Button
                     size="sm"
                     onClick={() =>
-                      setOptions((prev) => ({
-                        ...prev,
-                        colors: [...prev.colors, optionsText.colors],
-                      }))
+                      setOptions((prev) => {
+                        if (prev.colors) {
+                          return {
+                            ...prev,
+                            colors: [...prev.colors, optionsText.colors],
+                          };
+                        } else {
+                          return { ...prev };
+                        }
+                      })
                     }
                   >
                     ADD

@@ -34,20 +34,19 @@ import { trpc } from "../../../utils/trpc";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  categories: Array<{ name: string }> | undefined;
+  categories: Array<{ id: number; name: string }> | undefined;
 };
 
 const formDataInit = {
-  id: "",
   title: "",
   description: "",
   discount: false,
   discountRate: null,
-  thumbnail: null,
-  images: null,
+  thumbnail: "",
+  images: [],
   price: 0,
   quantity: 0,
-  category: "",
+  categoryId: 0,
 };
 const optionsTextInit = { size: "", color: "" };
 const optionsInit = { sizes: [], colors: [] };
@@ -63,16 +62,15 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
     colors: string[] | [];
   }>(optionsInit);
   const [formData, setFormData] = useState<{
-    id: string;
     title: string;
     description: string;
     discount: boolean;
     discountRate: number | null;
-    thumbnail: string | null;
-    images: string[] | null;
+    thumbnail: string;
+    images: string[];
     price: number;
     quantity: number;
-    category: string;
+    categoryId: number;
   }>(formDataInit);
 
   const { mutate } = trpc.product.regist.useMutation({
@@ -101,12 +99,17 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    const date = new Date();
     const size = options.sizes;
     const color = options.colors;
-    const createdAt = date.toDateString();
-    const updatedAt = date.toDateString();
-    mutate({ ...formData, size, color, createdAt, updatedAt });
+
+    mutate({
+      ...formData,
+      size,
+      color,
+      thumbnail:
+        "https://i.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI",
+      images: [],
+    });
   };
   return (
     <div>
@@ -118,21 +121,6 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
             <ModalCloseButton />
             <ModalBody>
               <FormControl>
-                <FormLabel>Product ID</FormLabel>
-                <Input
-                  id="product-id"
-                  name="id"
-                  type="text"
-                  placeholder="please input unique id"
-                  maxLength={12}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      [e.target.name]: e.target.value,
-                    }))
-                  }
-                  required
-                />
                 <FormLabel>Product title</FormLabel>
                 <Input
                   id="product-title"
@@ -245,18 +233,18 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
                 <FormLabel>category</FormLabel>
                 <Select
                   id="product-category"
-                  name="category"
+                  name="categoryId"
                   placeholder="Select category"
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      [e.target.name]: e.target.value,
+                      [e.target.name]: Number(e.target.value),
                     }))
                   }
                   required
                 >
                   {categories?.map((category, index) => (
-                    <option key={index} value={category.name}>
+                    <option key={index} value={category.id}>
                       {category.name}
                     </option>
                   ))}
