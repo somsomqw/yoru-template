@@ -69,6 +69,23 @@ export const outputSingleProductSchema = z.nullable(
   })
 );
 
+export const inputSearchByTitle = z.object({
+  title: z.string(),
+});
+
+export const outputSearchByTitle = z.nullable(
+  z
+    .object({
+      id: z.number(),
+      title: z.string(),
+      discount: z.boolean(),
+      discountRate: z.nullable(z.number()),
+      price: z.number(),
+      thumbnail: z.string(),
+    })
+    .array()
+);
+
 export type TableSingleProduct = z.TypeOf<typeof tableSingleProductSchema>;
 export type TableProduct = z.TypeOf<typeof outputTableProductsSchema>;
 export type RegistProductInput = z.TypeOf<typeof registProductSchema>;

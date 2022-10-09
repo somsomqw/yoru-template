@@ -7,57 +7,60 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import Category from "../../components/Category";
 import Counter from "../../components/combination/Counter";
 import { useCartCounter } from "../../context/CartContext";
-import { setLocalStorage } from "../../utils/storage";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
   id: number;
-  session: Session;
+  cartId: number | null;
 };
 
-const ProductDetail: React.FC<Props> = ({ id, session }) => {
+const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
   const toast = useToast();
+  const router = useRouter();
   const { data } = trpc.product.getSingle.useQuery({ id: Number(id) });
+  const { mutate } = trpc.cart.regist.useMutation({
+    onError: () =>
+      toast({
+        title: "System error is occured",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+    onSuccess: () => {
+      toast({
+        title: "Product added in cart",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      action.increase();
+    },
+  });
   const [, action] = useCartCounter();
   const [options, setOptions] = useState<{
-    size?: string;
-    color?: string;
+    size: string | null;
+    color: string | null;
     quantity: number;
-  }>({ quantity: 1 });
+  }>({ size: null, color: null, quantity: 1 });
 
   const onSubmit = (e: any) => {
     e.preventDefault();
     if (e.nativeEvent.submitter.name === "cart") {
-      if (session) {
-      } else {
-        const result = setLocalStorage<{
-          id: number;
-          size?: string;
-          color?: string;
-          quantity: number;
-          title: string;
-        }>("carts", {
-          id,
-          size: options?.size,
-          color: options?.color,
-          quantity: options.quantity,
-          title: data?.title ?? "",
-        });
-        toast({
-          title: result.message,
-          status: result.status,
-          duration: 5000,
-          isClosable: true,
-        });
-        action.increase();
-      }
+      cartId
+        ? mutate({
+            cartId,
+            productId: Number(id),
+            ...options,
+            title: data?.title ?? "",
+          })
+        : router.push("/");
     }
   };
   return (
@@ -167,10 +170,11 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const id = ctx.params?.id;
   const session = await getSession(ctx);
+  const cartId = session?.cartId ?? null;
   return {
     props: {
       id,
-      session,
+      cartId,
     },
   };
 };

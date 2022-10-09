@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   Thead,
@@ -8,39 +8,46 @@ import {
   Td,
   TableContainer,
   Button,
+  useToast,
 } from "@chakra-ui/react";
-import { setLocalStorage } from "../../utils/storage";
 import { useCartCounter } from "../../context/CartContext";
+import { OutputGetCart } from "../../schema/cart.schema";
+import { trpc } from "../../utils/trpc";
 
 type Props = {
-  carts?: CartType;
+  carts?: OutputGetCart;
+  refetch: () => void;
 };
 
-const CartDataTable: React.FC<Props> = ({ carts }) => {
+const CartDataTable: React.FC<Props> = ({ carts, refetch }) => {
+  const toast = useToast();
   const [count, action] = useCartCounter();
-  const [data, setData] = useState<CartType | undefined>(carts);
-  const onClickDelete = (e: any, index: number) => {
-    const localCarts = localStorage.getItem("carts");
-    if (localCarts) {
-      const parsedCarts: CartType = JSON.parse(localCarts);
-      const newCarts = parsedCarts.filter((_, i) => i !== index);
-      setLocalStorage<CartType>("newCarts", newCarts);
+  const { mutate } = trpc.cart.delete.useMutation({
+    onError: () =>
+      toast({
+        title: "System error is occured",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+    onSuccess: () => {
+      toast({
+        title: "Product deleted from cart",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
       action.decrease();
-    }
+    },
+  });
+
+  const onClickDelete = (e: any, index: number) => {
+    mutate({ cartDataId: index });
   };
 
   useEffect(() => {
-    setData(carts);
-  }, [carts]);
-
-  useEffect(() => {
-    const localCarts = localStorage.getItem("carts");
-    if (localCarts) {
-      const newCarts: CartType = JSON.parse(localCarts);
-      setData(newCarts);
-    }
+    refetch();
   }, [count]);
-
   return (
     <div>
       <TableContainer>
@@ -55,7 +62,7 @@ const CartDataTable: React.FC<Props> = ({ carts }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {data?.map((product, index) => (
+            {carts?.products?.map((product, index) => (
               <Tr key={index}>
                 <Td>
                   <span className="font-bold">{product.title}</span>
@@ -80,7 +87,7 @@ const CartDataTable: React.FC<Props> = ({ carts }) => {
                   <span className="font-bold ml-2">{product.quantity}</span>
                 </Td>
                 <Td isNumeric>
-                  <Button onClick={(e) => onClickDelete(e, index)}>
+                  <Button onClick={(e) => onClickDelete(e, product.id)}>
                     DELETE
                   </Button>
                 </Td>

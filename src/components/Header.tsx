@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BiSearch, BiUser, BiCart } from "react-icons/bi";
 import { useCartCounter } from "../context/CartContext";
 
@@ -17,6 +17,7 @@ type Props = {};
 const Header: React.FC<Props> = () => {
   const [count] = useCartCounter();
   const session = useSession();
+
   return (
     <div className="fixed w-full pl-4 pr-4 h-16 flex justify-between shadow-md bg-gray-200 z-50">
       <Link href="/">
@@ -24,11 +25,12 @@ const Header: React.FC<Props> = () => {
           <Text className="font-bold text-lg">TEMPLATE</Text>
         </div>
       </Link>
-      <form className="h-full flex items-center">
+      <form className="h-full flex items-center" method="GET" action="/search">
         <Input
           type="text"
           placeholder="Search"
           variant="filled"
+          name="title"
           roundedTopRight="none"
           roundedBottomRight="none"
         />
