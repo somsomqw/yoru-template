@@ -5,7 +5,7 @@ import React from "react";
 import { getDiscountPrice } from "../../utils/caculate";
 
 type Props = {
-  id: string;
+  id: number;
   url: string;
   title: string;
   price: number;

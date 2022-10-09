@@ -4,6 +4,8 @@ import {
   deleteProductSchema,
   editProductSchema,
   getSingleProductSchema,
+  inputSearchByTitle,
+  outputSearchByTitle,
   outputSingleProductSchema,
   outputTableProductsSchema,
   registProductSchema,
@@ -116,6 +118,29 @@ export const productRouter = t.router({
                 message: "SYSTEM ERROR",
               });
           }
+        }
+        throw e;
+      }
+    }),
+  searchByTitle: t.procedure
+    .input(inputSearchByTitle)
+    .output(outputSearchByTitle)
+    .query(async ({ input }) => {
+      try {
+        const items = await prisma.product.findMany({
+          where: {
+            title: {
+              contains: input.title,
+            },
+          },
+        });
+        return items;
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
         }
         throw e;
       }

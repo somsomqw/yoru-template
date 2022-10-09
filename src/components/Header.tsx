@@ -11,7 +11,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BiSearch, BiUser, BiCart } from "react-icons/bi";
 import { useCartCounter } from "../context/CartContext";
-import { trpc } from "../utils/trpc";
 
 type Props = {};
 
@@ -26,11 +25,12 @@ const Header: React.FC<Props> = () => {
           <Text className="font-bold text-lg">TEMPLATE</Text>
         </div>
       </Link>
-      <form className="h-full flex items-center">
+      <form className="h-full flex items-center" method="GET" action="/search">
         <Input
           type="text"
           placeholder="Search"
           variant="filled"
+          name="title"
           roundedTopRight="none"
           roundedBottomRight="none"
         />
