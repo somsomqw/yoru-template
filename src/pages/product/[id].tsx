@@ -9,20 +9,21 @@ import {
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Category from "../../components/Category";
 import Counter from "../../components/combination/Counter";
 import { useCartCounter } from "../../context/CartContext";
-import { setLocalStorage } from "../../utils/storage";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
   id: number;
-  cartId: number;
+  cartId: number | null;
 };
 
 const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
   const toast = useToast();
+  const router = useRouter();
   const { data } = trpc.product.getSingle.useQuery({ id: Number(id) });
   const { mutate } = trpc.cart.regist.useMutation({
     onError: () =>
@@ -32,13 +33,15 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
         duration: 5000,
         isClosable: true,
       }),
-    onSuccess: () =>
+    onSuccess: () => {
       toast({
         title: "Product added in cart",
         status: "success",
         duration: 5000,
         isClosable: true,
-      }),
+      });
+      action.increase();
+    },
   });
   const [, action] = useCartCounter();
   const [options, setOptions] = useState<{
@@ -50,35 +53,14 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
   const onSubmit = (e: any) => {
     e.preventDefault();
     if (e.nativeEvent.submitter.name === "cart") {
-      if (cartId) {
-        mutate({
-          cartId,
-          productId: Number(id),
-          ...options,
-          title: data?.title ?? "",
-        });
-      } else {
-        const result = setLocalStorage<{
-          id: number;
-          size: string | null;
-          color: string | null;
-          quantity: number;
-          title: string;
-        }>("carts", {
-          id,
-          size: options?.size,
-          color: options?.color,
-          quantity: options.quantity,
-          title: data?.title ?? "",
-        });
-        toast({
-          title: result.message,
-          status: result.status,
-          duration: 5000,
-          isClosable: true,
-        });
-        action.increase();
-      }
+      cartId
+        ? mutate({
+            cartId,
+            productId: Number(id),
+            ...options,
+            title: data?.title ?? "",
+          })
+        : router.push("/");
     }
   };
   return (
@@ -188,7 +170,7 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const id = ctx.params?.id;
   const session = await getSession(ctx);
-  const cartId = session?.cartId;
+  const cartId = session?.cartId ?? null;
   return {
     props: {
       id,

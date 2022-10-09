@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getFirestore } from "firebase-admin/firestore";
 import { prisma } from "../../../utils/prisma";
 
 export default NextAuth({
@@ -55,20 +54,27 @@ export default NextAuth({
       const email = session.user?.email;
       let isAdmin = false;
       let cartId;
+      let cartCount;
       if (email) {
         const targetUser = await prisma.user.findUnique({
           where: {
             email,
           },
           include: {
-            cart: true,
+            cart: {
+              include: {
+                products: true,
+              },
+            },
           },
         });
         if (targetUser) {
           isAdmin = targetUser.isAdmin;
           cartId = targetUser.cart?.id;
+          cartCount = targetUser.cart?.products.length;
         }
       }
+      session.cartCount = cartCount;
       session.cartId = cartId;
       session.isAdmin = isAdmin;
       session.accessToken = token.accessToken;

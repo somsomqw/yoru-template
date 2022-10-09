@@ -17,6 +17,7 @@ export const outputGetCartSchema = z.object({
   products: z.nullable(
     z
       .object({
+        id: z.number(),
         productId: z.number(),
         title: z.string(),
         size: z.nullable(z.string()),
@@ -25,6 +26,10 @@ export const outputGetCartSchema = z.object({
       })
       .array()
   ),
+});
+
+export const inputDeleteCartSchema = z.object({
+  cartDataId: z.number(),
 });
 
 export type OutputGetCart = z.TypeOf<typeof outputGetCartSchema>;

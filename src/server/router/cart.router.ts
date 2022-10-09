@@ -1,14 +1,10 @@
 import { t } from "../trpc";
 import * as trpc from "@trpc/server";
-import {
-  deleteCategorySchema,
-  editCategorySchema,
-  outPutCategorySchema,
-  registCategorySchema,
-} from "../../schema/category.schema";
+import { editCategorySchema } from "../../schema/category.schema";
 import { prisma } from "../../utils/prisma";
 import { Prisma } from "@prisma/client";
 import {
+  inputDeleteCartSchema,
   inputGetCartSchema,
   outputGetCartSchema,
   registCartSchema,
@@ -57,7 +53,23 @@ export const cartRouter = t.router({
       }
     }),
   delete: t.procedure
-    .input(deleteCategorySchema)
-    .mutation(async ({ input }) => {}),
+    .input(inputDeleteCartSchema)
+    .mutation(async ({ input }) => {
+      try {
+        await prisma.cartData.delete({
+          where: {
+            id: input.cartDataId,
+          },
+        });
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
   edit: t.procedure.input(editCategorySchema).mutation(async ({ input }) => {}),
 });

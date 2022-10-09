@@ -5,7 +5,7 @@ import Layout from "../components/Layout";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import { AppProps } from "next/app";
-import { CartContext, CartProvider } from "../context/CartContext";
+import { CartProvider } from "../context/CartContext";
 
 function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   return (
