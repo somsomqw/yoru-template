@@ -61,3 +61,10 @@ model CartData {
   cartId Int
   cart Cart @relation(fields: [cartId], references: [id])
 }
+
+model Campagign {
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  thumbnail String
+}

@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Banner from "../components/Banner";
 import Category from "../components/Category";
 import ProductCard from "../components/combination/ProductCard";
 import { trpc } from "../utils/trpc";
