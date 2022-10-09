@@ -13,7 +13,6 @@ const Home: React.FC = () => {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Banner />
       <div className="flex">
         <Category />
         <div className="flex flex-wrap gap-4">
