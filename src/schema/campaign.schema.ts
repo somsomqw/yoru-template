@@ -5,3 +5,14 @@ export const inputRegistCampaignSchema = z.object({
   description: z.string(),
   thumbnail: z.string(),
 });
+
+export const outputGetCampaignsSchema = z
+  .object({
+    id: z.number(),
+    title: z.string(),
+    description: z.string(),
+    thumbnail: z.string(),
+  })
+  .array();
+
+export type OutputGetCampaigns = z.TypeOf<typeof outputGetCampaignsSchema>;
