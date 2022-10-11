@@ -7,60 +7,62 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import Category from "../../components/Category";
 import Counter from "../../components/combination/Counter";
 import { useCartCounter } from "../../context/CartContext";
-import { setLocalStorage } from "../../utils/storage";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
-  id: string;
-  session: Session;
+  id: number;
+  cartId: number | null;
 };
 
-const ProductDetail: React.FC<Props> = ({ id, session }) => {
+const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
   const toast = useToast();
-  const { data } = trpc.product.getSingle.useQuery({ id });
+  const router = useRouter();
+  const { data } = trpc.product.getSingle.useQuery({ id: Number(id) });
+  const { mutate } = trpc.cart.regist.useMutation({
+    onError: () =>
+      toast({
+        title: "System error is occured",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+    onSuccess: () => {
+      toast({
+        title: "Product added in cart",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      action.increase();
+    },
+  });
   const [, action] = useCartCounter();
   const [options, setOptions] = useState<{
-    size?: string;
-    color?: string;
+    size: string | null;
+    color: string | null;
     quantity: number;
-  }>({ quantity: 1 });
+  }>({ size: null, color: null, quantity: 1 });
 
   const onSubmit = (e: any) => {
     e.preventDefault();
     if (e.nativeEvent.submitter.name === "cart") {
-      if (session) {
-      } else {
-        const result = setLocalStorage<{
-          id: string;
-          size?: string;
-          color?: string;
-          quantity: number;
-          title: string;
-        }>("carts", {
-          id,
-          size: options?.size,
-          color: options?.color,
-          quantity: options.quantity,
-          title: data?.product.title,
-        });
-        toast({
-          title: result.message,
-          status: result.status,
-          duration: 5000,
-          isClosable: true,
-        });
-        action.increase();
-      }
+      cartId
+        ? mutate({
+            cartId,
+            productId: Number(id),
+            ...options,
+            title: data?.title ?? "",
+          })
+        : router.push("/");
     }
   };
-  console.log(data?.product.color);
   return (
     <div className="p-10 flex">
       <Category />
@@ -72,14 +74,14 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
           layout="fixed"
         />
         <Center>
-          <Text className="w-112">{data?.product.description}</Text>
+          <Text className="w-112">{data?.description}</Text>
         </Center>
       </div>
       <form method="POST" onSubmit={onSubmit}>
         <div className="p-12 w-128">
-          <Text className="text-2xl font-bold mb-2">{data?.product.title}</Text>
-          <Text className="text-2xl font-bold">￥{data?.product.price}</Text>
-          {data?.product.size && data.product.size.length > 0 && (
+          <Text className="text-2xl font-bold mb-2">{data?.title}</Text>
+          <Text className="text-2xl font-bold">￥{data?.price}</Text>
+          {data?.size && data.size.length > 0 && (
             <div>
               <Text>Size</Text>
               <Select
@@ -89,7 +91,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
                 }
                 required
               >
-                {data.product.size.map((s: string) => (
+                {data.size.map((s: string) => (
                   <option key={s} value={s}>
                     {s}
                   </option>
@@ -97,7 +99,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
               </Select>
             </div>
           )}
-          {data?.product.color && data.product.color.length > 0 && (
+          {data?.color && data.color.length > 0 && (
             <div>
               <Text>Color</Text>
               <Select
@@ -107,7 +109,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
                 }
                 required
               >
-                {data.product.color.map((c: string) => (
+                {data.color.map((c: string) => (
                   <option key={c} value={c}>
                     {c}
                   </option>
@@ -128,7 +130,7 @@ const ProductDetail: React.FC<Props> = ({ id, session }) => {
                     }));
                 }}
                 onIncrease={() => {
-                  if (options.quantity < data?.product.quantity)
+                  if (data?.quantity && options.quantity < data?.quantity)
                     setOptions((prev) => ({
                       ...prev,
                       quantity: prev.quantity + 1,
@@ -168,10 +170,11 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const id = ctx.params?.id;
   const session = await getSession(ctx);
+  const cartId = session?.cartId ?? null;
   return {
     props: {
       id,
-      session,
+      cartId,
     },
   };
 };
