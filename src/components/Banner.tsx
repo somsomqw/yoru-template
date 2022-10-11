@@ -1,55 +1,70 @@
 import { Center, Icon, IconButton } from "@chakra-ui/react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BsDot } from "react-icons/bs";
+import { OutputGetCampaigns } from "../schema/campaign.schema";
 
-type Props = {};
+type Props = {
+  campaigns: OutputGetCampaigns | undefined;
+};
 
-const Banner = (props: Props) => {
+const Banner: React.FC<Props> = ({ campaigns }) => {
   const [currentBanner, setCurrentBanner] = useState<number>(0);
+
   useEffect(() => {
-    // const autoMoveBanner = setInterval(
-    //   () => setCurrentBanner((prev) => prev + 1),
-    //   5000
-    // );
-    // return () => clearInterval(autoMoveBanner);
-  }, []);
+    const autoMoveBanner = setInterval(
+      () =>
+        setCurrentBanner((prev) => {
+          if (prev + 1 === campaigns?.length) {
+            return 0;
+          } else {
+            return prev + 1;
+          }
+        }),
+      5000
+    );
+    return () => clearInterval(autoMoveBanner);
+  }, [campaigns]);
   return (
-    <div>
-      <div className="w-screen h-96 overflow-hidden">
+    <div className="bg-gray-50">
+      <div className="w-screen overflow-hidden flex justify-center">
         <div
           style={{
             transform: `translate(-${currentBanner * 100}%)`,
           }}
-          className="w-full h-full grid grid-flow-col transition-all"
+          className="w-268 h-full flex justify-start transition duration-500"
         >
-          <div className="bg-red-500 w-screen h-full"></div>
-          <div className="bg-green-500 w-screen h-full"></div>
-          <div className="bg-blue-500 w-screen h-full"></div>
+          {campaigns?.map((campaign, index) => (
+            <Link href={`/campaign/${campaign.id}`}>
+              <div className="p-6 cursor-pointer">
+                <div
+                  className={`w-256 h-156 relative ${
+                    index !== currentBanner && "opacity-80 scale-95"
+                  }`}
+                >
+                  <Image
+                    className="rounded-lg"
+                    src={"/assets/banner_sample.jpg"}
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
       <Center>
-        <Icon
-          color={`gray.300`}
-          boxSize={6}
-          className="cursor-pointer"
-          onClick={() => setCurrentBanner(0)}
-          as={BsDot}
-        />
-        <Icon
-          color={`gray.300`}
-          boxSize={6}
-          className="cursor-pointer"
-          onClick={() => setCurrentBanner(1)}
-          as={BsDot}
-        />
-        <Icon
-          color={`gray.300`}
-          boxSize={6}
-          className="cursor-pointer"
-          onClick={() => setCurrentBanner(2)}
-          as={BsDot}
-        />
+        {campaigns?.map((campaign, index) => (
+          <Icon
+            color={`${currentBanner === index ? "gray.500" : "gray.300 "}`}
+            boxSize={6}
+            className="cursor-pointer"
+            onClick={() => setCurrentBanner(index)}
+            as={BsDot}
+          />
+        ))}
       </Center>
     </div>
   );
