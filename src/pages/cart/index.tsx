@@ -1,5 +1,7 @@
+import { Button, Spacer, Text } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import CartDataTable from "../../components/cart/CartDataTable";
 import { OutputGetCart } from "../../schema/cart.schema";
@@ -17,8 +19,20 @@ const Cart: React.FC<Props> = ({ cartId }) => {
   }, [data]);
 
   return (
-    <div>
+    <div className="p-10">
+      <Text className="text-3xl font-bold">Cart</Text>
+      <Spacer h={10} />
       <CartDataTable carts={carts} refetch={refetch} />
+      <div className="flex justify-end pr-10">
+        <Link
+          href={{
+            pathname: "/order",
+            query: { cartId },
+          }}
+        >
+          <Button colorScheme="teal">TO ORDER DETAILS</Button>
+        </Link>
+      </div>
     </div>
   );
 };

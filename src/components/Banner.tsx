@@ -1,4 +1,4 @@
-import { Center, Icon, IconButton } from "@chakra-ui/react";
+import { Center, Icon } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ const Banner: React.FC<Props> = ({ campaigns }) => {
           className="w-268 h-full flex justify-start transition duration-500"
         >
           {campaigns?.map((campaign, index) => (
-            <Link href={`/campaign/${campaign.id}`}>
+            <Link key={campaign.id} href={`/campaign/${campaign.id}`}>
               <div className="p-6 cursor-pointer">
                 <div
                   className={`w-256 h-156 relative ${
@@ -45,7 +45,7 @@ const Banner: React.FC<Props> = ({ campaigns }) => {
                 >
                   <Image
                     className="rounded-lg"
-                    src={"/assets/banner_sample.jpg"}
+                    src={campaign.thumbnail}
                     layout="fill"
                     objectFit="contain"
                   />
@@ -58,6 +58,7 @@ const Banner: React.FC<Props> = ({ campaigns }) => {
       <Center>
         {campaigns?.map((campaign, index) => (
           <Icon
+            key={campaign.id}
             color={`${currentBanner === index ? "gray.500" : "gray.300 "}`}
             boxSize={6}
             className="cursor-pointer"

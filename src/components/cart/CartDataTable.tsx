@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   Thead,
@@ -9,6 +9,9 @@ import {
   TableContainer,
   Button,
   useToast,
+  Tfoot,
+  Text,
+  Spacer,
 } from "@chakra-ui/react";
 import { useCartCounter } from "../../context/CartContext";
 import { OutputGetCart } from "../../schema/cart.schema";
@@ -22,6 +25,7 @@ type Props = {
 const CartDataTable: React.FC<Props> = ({ carts, refetch }) => {
   const toast = useToast();
   const [count, action] = useCartCounter();
+  const [totalPrice, setTotalPrice] = useState<number>();
   const { mutate } = trpc.cart.delete.useMutation({
     onError: () =>
       toast({
@@ -48,6 +52,16 @@ const CartDataTable: React.FC<Props> = ({ carts, refetch }) => {
   useEffect(() => {
     refetch();
   }, [count]);
+
+  useEffect(() => {
+    if (carts) {
+      const totalPrice = carts.products?.reduce(
+        (prev, curr) => prev + curr.price,
+        0
+      );
+      setTotalPrice(totalPrice);
+    }
+  }, [carts]);
   return (
     <div>
       <TableContainer>
@@ -95,6 +109,11 @@ const CartDataTable: React.FC<Props> = ({ carts, refetch }) => {
             ))}
           </Tbody>
         </Table>
+        <Spacer h={10} />
+        <div className="flex justify-end p-10">
+          <Text className="text-2xl">Total:</Text>
+          <Text className="text-2xl ml-2 font-bold">{totalPrice}</Text>
+        </div>
       </TableContainer>
     </div>
   );

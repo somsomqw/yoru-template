@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
 import React, { ReactNode } from "react";
-import Category from "./Category";
 import Footer from "./Footer";
 import Header from "./Header";
 import AdminLayout from "../components/admin/Layout";
-import Banner from "./Banner";
 
 type Props = {
   children: ReactNode;

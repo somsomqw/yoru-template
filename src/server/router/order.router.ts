@@ -8,13 +8,14 @@ import {
   inputRegistCampaignSchema,
   outputGetCampaignsSchema,
 } from "../../schema/campaign.schema";
+import { inputRegistOrderSchema } from "../../schema/order.schema";
 
-export const campaignRouter = t.router({
+export const orderRouter = t.router({
   regist: t.procedure
-    .input(inputRegistCampaignSchema)
+    .input(inputRegistOrderSchema)
     .mutation(async ({ input }) => {
       try {
-        await prisma.campagign.create({
+        await prisma.order.create({
           data: {
             ...input,
           },

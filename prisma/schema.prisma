@@ -49,6 +49,7 @@ model Cart {
   userEmail String @unique
   user User @relation(fields: [userEmail], references: [email])
   products CartData[] 
+  orders Order[]
 }
 
 model CartData {
@@ -58,6 +59,7 @@ model CartData {
   size String?
   color String?
   quantity Int
+  price Int
   cartId Int
   cart Cart @relation(fields: [cartId], references: [id])
 }
@@ -67,4 +69,13 @@ model Campagign {
   title String
   description String
   thumbnail String
+}
+
+model Order {
+  id String @id @default(uuid())
+  cartId Int
+  cart Cart @relation(fields: [cartId], references: [id])
+  totalPrice Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
