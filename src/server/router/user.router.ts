@@ -6,6 +6,7 @@ import {
 } from "../../schema/user.schema";
 import { prisma } from "../../utils/prisma";
 import { Input } from "@chakra-ui/react";
+import { Prisma } from "@prisma/client";
 
 export const userRouter = t.router({
   regist: t.procedure.input(registUserSchema).mutation(async ({ input }) => {

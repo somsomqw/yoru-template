@@ -41,7 +41,7 @@ CREATE TABLE "Product" (
 -- CreateTable
 CREATE TABLE "Cart" (
     "id" SERIAL NOT NULL,
-    "userEmail" INTEGER NOT NULL,
+    "userEmail" TEXT NOT NULL,
 
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")
 );
@@ -59,6 +59,16 @@ CREATE TABLE "CartData" (
     CONSTRAINT "CartData_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Campagign" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "thumbnail" TEXT NOT NULL,
+
+    CONSTRAINT "Campagign_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -72,7 +82,7 @@ CREATE UNIQUE INDEX "Cart_userEmail_key" ON "Cart"("userEmail");
 ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "User"("email") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CartData" ADD CONSTRAINT "CartData_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
