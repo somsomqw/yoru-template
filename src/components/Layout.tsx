@@ -33,10 +33,7 @@ const Layout: React.FC<Props> = ({ children }) => {
     return (
       <div>
         <Header />
-        <Banner />
-        <div className="min-h-screen pt-16 pl-40 pr-40 bg-gray-50">
-          {children}
-        </div>
+        <div>{children}</div>
         <Footer />
       </div>
     );

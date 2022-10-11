@@ -9,7 +9,10 @@ import {
   outputGetCartSchema,
   registCartSchema,
 } from "../../schema/cart.schema";
-import { inputRegistCampaignSchema } from "../../schema/campaign.schema";
+import {
+  inputRegistCampaignSchema,
+  outputGetCampaignsSchema,
+} from "../../schema/campaign.schema";
 
 export const campaignRouter = t.router({
   regist: t.procedure
@@ -31,7 +34,20 @@ export const campaignRouter = t.router({
         throw e;
       }
     }),
-  get: t.procedure.input(inputGetCartSchema).query(async ({ input }) => {}),
+  get: t.procedure.output(outputGetCampaignsSchema).query(async () => {
+    try {
+      const campaigns = await prisma.campagign.findMany();
+      return campaigns;
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new trpc.TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "SYSTEM ERROR",
+        });
+      }
+      throw e;
+    }
+  }),
   delete: t.procedure
     .input(inputDeleteCartSchema)
     .mutation(async ({ input }) => {}),
