@@ -1,12 +1,19 @@
 import { Center, Icon, IconButton } from "@chakra-ui/react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsDot } from "react-icons/bs";
 
 type Props = {};
 
 const Banner = (props: Props) => {
   const [currentBanner, setCurrentBanner] = useState<number>(0);
+  useEffect(() => {
+    // const autoMoveBanner = setInterval(
+    //   () => setCurrentBanner((prev) => prev + 1),
+    //   5000
+    // );
+    // return () => clearInterval(autoMoveBanner);
+  }, []);
   return (
     <div>
       <div className="w-screen h-96 overflow-hidden">

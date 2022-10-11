@@ -27,6 +27,7 @@ const Sidemenu: React.FC<Props> = () => {
       <div className="p-4">
         <Item to="/admin/categories">categories</Item>
         <Item to="/admin/products">products</Item>
+        <Item to="/admin/campaigns">campaigns</Item>
       </div>
     </div>
   );
