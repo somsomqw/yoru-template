@@ -15,4 +15,8 @@ export const outputGetCampaignsSchema = z
   })
   .array();
 
+export const inputDeleteCampaignSchema = z.object({
+  id: z.number(),
+});
+
 export type OutputGetCampaigns = z.TypeOf<typeof outputGetCampaignsSchema>;

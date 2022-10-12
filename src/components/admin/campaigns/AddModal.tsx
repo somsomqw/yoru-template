@@ -50,8 +50,7 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose }) => {
     e.preventDefault();
     const title = e.target.title.value;
     const description = e.target.description.value;
-    const thumbnail =
-      "https://i.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI";
+    const thumbnail = "/assets/banner_sample.jpg";
     mutate({ title, description, thumbnail });
   };
   return (

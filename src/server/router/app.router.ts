@@ -3,6 +3,7 @@ import { authRouter } from "./auth.router";
 import { campaignRouter } from "./campaign.router";
 import { cartRouter } from "./cart.router";
 import { categoryRouter } from "./category.router";
+import { orderRouter } from "./order.router";
 import { productRouter } from "./product.router";
 import { userRouter } from "./user.router";
 
@@ -13,4 +14,5 @@ export const appRouter = t.router({
   product: productRouter,
   cart: cartRouter,
   campaign: campaignRouter,
+  order: orderRouter,
 });

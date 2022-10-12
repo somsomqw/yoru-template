@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   email String @unique
   password String
   isAdmin Boolean @default(false)
   cart Cart?
+  order Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -45,7 +46,7 @@ model Product {
 }
 
 model Cart {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   userEmail String @unique
   user User @relation(fields: [userEmail], references: [email])
   products CartData[] 
@@ -58,8 +59,11 @@ model CartData {
   size String?
   color String?
   quantity Int
-  cartId Int
-  cart Cart @relation(fields: [cartId], references: [id])
+  price Int
+  cartId String?
+  orderId String?
+  cart Cart? @relation(fields: [cartId], references: [id])
+  order Order? @relation(fields: [orderId], references: [id])
 }
 
 model Campagign {
@@ -67,4 +71,25 @@ model Campagign {
   title String
   description String
   thumbnail String
+}
+
+model Order {
+  id String @id @default(uuid())
+  userEmail String
+  user User @relation(fields: [userEmail], references: [email])
+  products CartData[]
+  status OrderStatus
+  totalPrice Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PAYMENT_SUCCESS
+  PAYMENT_PROCEED
+  DELIVERY_SUCCESS
+  DELIVERY_PROCEED
+  DELIVERY_READY
+  ORDER_CANCEL
+  PROGRESS_FINISHIED
 }

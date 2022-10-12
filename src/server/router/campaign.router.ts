@@ -4,12 +4,7 @@ import { editCategorySchema } from "../../schema/category.schema";
 import { prisma } from "../../utils/prisma";
 import { Prisma } from "@prisma/client";
 import {
-  inputDeleteCartSchema,
-  inputGetCartSchema,
-  outputGetCartSchema,
-  registCartSchema,
-} from "../../schema/cart.schema";
-import {
+  inputDeleteCampaignSchema,
   inputRegistCampaignSchema,
   outputGetCampaignsSchema,
 } from "../../schema/campaign.schema";
@@ -49,7 +44,23 @@ export const campaignRouter = t.router({
     }
   }),
   delete: t.procedure
-    .input(inputDeleteCartSchema)
-    .mutation(async ({ input }) => {}),
+    .input(inputDeleteCampaignSchema)
+    .mutation(async ({ input }) => {
+      try {
+        await prisma.campagign.delete({
+          where: {
+            id: input.id,
+          },
+        });
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
   edit: t.procedure.input(editCategorySchema).mutation(async ({ input }) => {}),
 });
