@@ -13,3 +13,9 @@ export const loginUserSchema = z.object({
 export const getUserEmailSchema = z.object({
   email: z.string()
 });
+
+export const editUserSchema = z.object({
+  motoEmail: z.string(),
+  email: z.string(),
+  password: z.string(),
+});

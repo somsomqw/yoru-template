@@ -1,11 +1,12 @@
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import React from "react";
 import {
-  Text, Icon, Box, Input, Button, Spacer, InputGroup, InputRightElement
+  Text, Box, Input, Button, Spacer, InputGroup, InputRightElement, ButtonGroup, useToast, FormControl, FormLabel
 } from "@chakra-ui/react";
 import { trpc } from "../../utils/trpc";
 import { useSession, getSession} from "next-auth/react";
 import Sidemenu from "../../components/profile/Sidemenu";
+import { useRouter } from "next/router";
 
 type Props = {
   email: string;
@@ -14,42 +15,86 @@ type Props = {
 const Profile: React.FC<Props> = ({ email }) => {
   const { data, refetch } = trpc.user.get.useQuery({email: email})
   const [show, setShow] = React.useState(false)
-  const [edit, setEdit] = React.useState(false)
+  const [edit, setEdit] = React.useState(true)
   const handleClick = () => setShow(!show)
   const editText = () => setEdit(!edit)
+  const toast = useToast();
+  const router = useRouter();
 
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    const editInfo = {
+      motoEmail: email,
+      email: String(e.target.email.value) ?? "",
+      password: String(e.target.password.value) ?? "",
+    };console.log(editInfo.email)
+    mutate(editInfo);
+    setEdit(!edit)
+  };
+
+  const {mutate} = trpc.user.edit.useMutation({
+    onError: (error) =>
+      toast({
+        title: "Failed.",
+        status: "error",
+        description: error.message,
+        duration: 5000,
+      }),
+    onSuccess: () => {
+      toast({
+        title: "Product edited.",
+        status: "success",
+        duration: 5000,
+      });
+      router.push("/profile");
+    },
+  });
+  
   return (
     <div className="min-h-screen pl-60 pr-60">
       <Text className="font-bold text-3xl p-10">My Account</Text>
-      <div className="flex justify-between">
+      <div className="flex justify-Center">
         <Sidemenu />
         <Box w="50rem" h="100rem" bg="gray.100" rounded="md" p="10" shadow="lg">
-          <div className="flex justify-between">
-            <Text className="font-bold text-2xl pb-5">My details</Text>
-            <Button w="140px" colorScheme="green" onClick={editText}>edit</Button>
-          </div>
-          <Text p="2">email</Text>
-          <Input
-            value={data?.email}
-            w="340px"
-            bg="white"
-            readOnly={edit ? true :false}/>
-          <Spacer h="5" />
-          <Text p="2">password</Text>
-          <InputGroup size='md'>
-            <Input 
-              w="340px"
-              value={data?.password}
-              type={show ? 'text' : 'password'}
-              bg="white"
-              readOnly/>
-            <InputRightElement w="52rem">
-              <Button h="1.75rem" size="sm" onClick={handleClick}>
-                {show ? 'Hide' : 'Show'}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-          <Spacer h="5" />
+          
+          <form method="POST" onSubmit={onSubmit}>
+            <div className="flex justify-between">
+              <Text className="font-bold text-2xl pb-5">My details</Text>
+              <ButtonGroup>
+                {edit ? <Button w="100px" colorScheme="green" onClick={editText}>edit</Button> 
+                : <><Button w="100px" colorScheme="red" onClick={editText}>cancel</Button>
+                  <Button type="submit" w="100px" colorScheme="blue">save</Button></>}
+              </ButtonGroup>
+            </div>
+            <FormControl>
+              <FormLabel>email</FormLabel>
+              <Input
+                id="user-email"
+                name="email"
+                type="text"
+                bg="white"
+                defaultValue={data?.email}
+                disabled={true}
+                onChange={()=>{}}/>
+              <Spacer h="5" />
+              <FormLabel>password</FormLabel>
+              <InputGroup size='md'>
+                <Input 
+                  id="user-password"
+                  name="password"
+                  type={show ? 'text' : 'password'}
+                  bg="white"
+                  defaultValue={data?.password}
+                  disabled={edit}
+                  onChange={()=>{}}/>
+                <InputRightElement width='4.5rem'>
+                  <Button h="1.75rem" size="sm" onClick={handleClick}>
+                    {show ? 'Hide' : 'Show'}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
+          </form>
         </Box>
       </div>
     </div>
