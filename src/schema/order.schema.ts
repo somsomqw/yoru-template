@@ -1,8 +1,20 @@
 import z, { number } from "zod";
 
 export const inputRegistOrderSchema = z.object({
-  cartId: z.number(),
+  userEmail: z.string(),
   totalPrice: z.number(),
+  cartData: z.number().array(),
 });
 
-export type InputRegistSchema = z.TypeOf<typeof inputRegistOrderSchema>;
+export const outputGetOrdersSchema = z
+  .object({
+    id: z.string(),
+    userEmail: z.string(),
+    totalPrice: z.number(),
+    createdAt: z.date(),
+    status: z.string(),
+  })
+  .array();
+
+export type InputRegistOrderSchema = z.TypeOf<typeof inputRegistOrderSchema>;
+export type OutputGetOrdersSchema = z.TypeOf<typeof outputGetOrdersSchema>;

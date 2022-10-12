@@ -1,25 +1,37 @@
 import { t } from "../trpc";
 import * as trpc from "@trpc/server";
-import { editCategorySchema } from "../../schema/category.schema";
 import { prisma } from "../../utils/prisma";
 import { Prisma } from "@prisma/client";
 import {
-  inputDeleteCampaignSchema,
-  inputRegistCampaignSchema,
-  outputGetCampaignsSchema,
-} from "../../schema/campaign.schema";
-import { inputRegistOrderSchema } from "../../schema/order.schema";
+  inputRegistOrderSchema,
+  outputGetOrdersSchema,
+} from "../../schema/order.schema";
 
 export const orderRouter = t.router({
   regist: t.procedure
     .input(inputRegistOrderSchema)
     .mutation(async ({ input }) => {
       try {
-        await prisma.order.create({
+        const newOrder = await prisma.order.create({
           data: {
-            ...input,
+            userEmail: input.userEmail,
+            totalPrice: input.totalPrice,
+            status: "PAYMENT_PROCEED",
           },
         });
+        Promise.all(
+          input.cartData.map(async (id) => {
+            await prisma.cartData.update({
+              where: {
+                id,
+              },
+              data: {
+                cartId: null,
+                orderId: newOrder.id,
+              },
+            });
+          })
+        );
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           throw new trpc.TRPCError({
@@ -30,10 +42,10 @@ export const orderRouter = t.router({
         throw e;
       }
     }),
-  get: t.procedure.output(outputGetCampaignsSchema).query(async () => {
+  get: t.procedure.output(outputGetOrdersSchema).query(async () => {
     try {
-      const campaigns = await prisma.campagign.findMany();
-      return campaigns;
+      const orders = await prisma.order.findMany();
+      return orders;
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         throw new trpc.TRPCError({
@@ -44,24 +56,6 @@ export const orderRouter = t.router({
       throw e;
     }
   }),
-  delete: t.procedure
-    .input(inputDeleteCampaignSchema)
-    .mutation(async ({ input }) => {
-      try {
-        await prisma.campagign.delete({
-          where: {
-            id: input.id,
-          },
-        });
-      } catch (e) {
-        if (e instanceof Prisma.PrismaClientKnownRequestError) {
-          throw new trpc.TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "SYSTEM ERROR",
-          });
-        }
-        throw e;
-      }
-    }),
-  edit: t.procedure.input(editCategorySchema).mutation(async ({ input }) => {}),
+  delete: t.procedure.mutation(async ({ input }) => {}),
+  edit: t.procedure.mutation(async ({ input }) => {}),
 });

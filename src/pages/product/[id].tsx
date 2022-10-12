@@ -18,7 +18,7 @@ import { trpc } from "../../utils/trpc";
 
 type Props = {
   id: number;
-  cartId: number | null;
+  cartId: string | null;
 };
 
 const ProductDetail: React.FC<Props> = ({ id, cartId }) => {

@@ -8,7 +8,7 @@ import { OutputGetCart } from "../../schema/cart.schema";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
-  cartId: number;
+  cartId: string;
 };
 
 const Cart: React.FC<Props> = ({ cartId }) => {

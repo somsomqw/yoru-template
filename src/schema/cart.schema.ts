@@ -7,11 +7,11 @@ export const registCartSchema = z.object({
   color: z.nullable(z.string()),
   price: z.number(),
   quantity: z.number(),
-  cartId: z.number(),
+  cartId: z.string(),
 });
 
 export const inputGetCartSchema = z.object({
-  cartId: z.number(),
+  cartId: z.string(),
 });
 
 export const outputGetCartSchema = z.object({

@@ -21,6 +21,7 @@ export const CartProvider: React.FC<{
   }, [session]);
   const action = useMemo(
     () => ({
+      setCount,
       increase: () => setCount((prev) => prev + 1),
       decrease: () => setCount((prev) => prev - 1),
     }),
