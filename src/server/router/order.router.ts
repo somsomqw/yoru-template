@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import {
   inputRegistOrderSchema,
   outputGetOrdersSchema,
+  outputGetOrdersTodaySchema,
 } from "../../schema/order.schema";
 
 export const orderRouter = t.router({
@@ -56,6 +57,43 @@ export const orderRouter = t.router({
       throw e;
     }
   }),
+  getOrdersToday: t.procedure
+    .output(outputGetOrdersTodaySchema)
+    .query(async () => {
+      try {
+        const date = new Date();
+        const today = `${date.getFullYear()}-${
+          date.getMonth() + 1
+        }-${date.getDate()}`;
+
+        date.setDate(new Date(today).getDate() + 1);
+        const tomorrow = `${date.getFullYear()}-${
+          date.getMonth() + 1
+        }-${date.getDate()}`;
+
+        const orders = await prisma.order.findMany({
+          where: {
+            createdAt: {
+              gte: new Date(today),
+              lt: new Date(tomorrow),
+            },
+          },
+        });
+
+        const progressFinishedOrder = orders.filter(
+          (order) => order.status !== "PROGRESS_FINISHIED"
+        );
+        return progressFinishedOrder;
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
   delete: t.procedure.mutation(async ({ input }) => {}),
   edit: t.procedure.mutation(async ({ input }) => {}),
 });

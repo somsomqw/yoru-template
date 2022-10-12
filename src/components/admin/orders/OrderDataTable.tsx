@@ -11,6 +11,8 @@ import {
   ButtonGroup,
   useDisclosure,
   Badge,
+  Text,
+  Spacer,
 } from "@chakra-ui/react";
 import { OutputGetOrdersSchema } from "../../../schema/order.schema";
 import {
@@ -24,7 +26,9 @@ type Props = {
 
 const OrderDataTable: React.FC<Props> = ({ orders }) => {
   return (
-    <div>
+    <div className="p-4">
+      <Text className="font-bold text-2xl">Order status</Text>
+      <Spacer h={6} />
       <TableContainer>
         <Table variant="simple">
           <Thead>

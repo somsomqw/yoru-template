@@ -16,5 +16,11 @@ export const outputGetOrdersSchema = z
   })
   .array();
 
+export const outputGetOrdersTodaySchema = z
+  .object({
+    totalPrice: z.number(),
+  })
+  .array();
+
 export type InputRegistOrderSchema = z.TypeOf<typeof inputRegistOrderSchema>;
 export type OutputGetOrdersSchema = z.TypeOf<typeof outputGetOrdersSchema>;

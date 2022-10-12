@@ -1,8 +1,10 @@
+import { Text } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import OrderDataTable from "../../components/admin/orders/OrderDataTable";
+import RevenueStat from "../../components/admin/orders/RevenueStat";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
@@ -11,9 +13,11 @@ type Props = {
 
 const Admin: React.FC<Props> = () => {
   const { data } = trpc.order.get.useQuery();
-  console.log(data);
+  const { data: ordersTodayData } = trpc.order.getOrdersToday.useQuery();
+  console.log(ordersTodayData);
   return (
     <div className="p-10">
+      <RevenueStat />
       <OrderDataTable orders={data} />
     </div>
   );
