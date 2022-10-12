@@ -23,7 +23,7 @@ const ProductCard: React.FC<Props> = ({
 }) => {
   return (
     <Link href={`product/${id}`}>
-      <div className="shadow-md cursor-pointer hover:opacity-80 transition-all">
+      <div className="h-96 shadow-md cursor-pointer hover:opacity-80 transition-all">
         <div className="relative">
           <Image src={url} width={200} height={300} />
           {discount && (

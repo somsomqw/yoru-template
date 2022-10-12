@@ -3,12 +3,14 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
 import AddModal from "../../../components/admin/campaigns/AddModal";
+import CampaignDataTable from "../../../components/admin/campaigns/CampaignDataTable";
+import { trpc } from "../../../utils/trpc";
 
 type Props = {};
 
 const Campaigns: React.FC<Props> = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const { data, refetch } = trpc.campaign.get.useQuery();
   return (
     <div className="p-10">
       <div className="flex justify-between">
@@ -18,6 +20,7 @@ const Campaigns: React.FC<Props> = () => {
         </Button>
       </div>
       <Spacer h="10" />
+      <CampaignDataTable campaigns={data} refetch={refetch} />
       <AddModal isOpen={isOpen} onClose={onClose} />
     </div>
   );

@@ -18,7 +18,7 @@ import { trpc } from "../../utils/trpc";
 
 type Props = {
   id: number;
-  cartId: number | null;
+  cartId: string | null;
 };
 
 const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
@@ -52,13 +52,14 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    if (e.nativeEvent.submitter.name === "cart") {
+    if (e.nativeEvent.submitter.name === "cart" && data) {
       cartId
         ? mutate({
             cartId,
             productId: Number(id),
             ...options,
-            title: data?.title ?? "",
+            title: data.title,
+            price: options.quantity * data.price,
           })
         : router.push("/");
     }
