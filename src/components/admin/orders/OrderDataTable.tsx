@@ -19,6 +19,7 @@ import {
   convertDateToString,
   getOrderProgressColor,
 } from "../../../utils/caculate";
+import Link from "next/link";
 
 type Props = {
   orders: OutputGetOrdersSchema | undefined;
@@ -41,16 +42,18 @@ const OrderDataTable: React.FC<Props> = ({ orders }) => {
           </Thead>
           <Tbody>
             {orders?.map((order) => (
-              <Tr key={order.id}>
-                <Td>{order.id}</Td>
-                <Td>{order.totalPrice}</Td>
-                <Td>
-                  <Badge colorScheme={getOrderProgressColor(order.status)}>
-                    {order.status}
-                  </Badge>
-                </Td>
-                <Td>{convertDateToString(new Date(order.createdAt))}</Td>
-              </Tr>
+              <Link key={order.id} href={`/admin/order/${order.id}`}>
+                <Tr className="cursor-pointer hover:bg-gray-200">
+                  <Td>{order.id}</Td>
+                  <Td>{order.totalPrice}</Td>
+                  <Td>
+                    <Badge colorScheme={getOrderProgressColor(order.status)}>
+                      {order.status}
+                    </Badge>
+                  </Td>
+                  <Td>{convertDateToString(new Date(order.createdAt))}</Td>
+                </Tr>
+              </Link>
             ))}
           </Tbody>
         </Table>

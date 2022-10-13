@@ -40,6 +40,10 @@ export const tableSingleProductSchema = z.object({
   discountRate: z.nullable(z.number()),
 });
 
+export const inputGetProductsByCategoryId = z.object({
+  id: z.number(),
+});
+
 export const getSingleProductSchema = z.object({
   id: z.number(),
 });
@@ -86,7 +90,12 @@ export const outputSearchByTitle = z.nullable(
     .array()
 );
 
+export const outputGetProductsByCategoryId = tableSingleProductSchema.array();
+
 export type TableSingleProduct = z.TypeOf<typeof tableSingleProductSchema>;
 export type TableProduct = z.TypeOf<typeof outputTableProductsSchema>;
 export type RegistProductInput = z.TypeOf<typeof registProductSchema>;
 export type EditProductInput = z.TypeOf<typeof editProductSchema>;
+export type OutputGetProductsByCategoryId = z.TypeOf<
+  typeof outputGetProductsByCategoryId
+>;

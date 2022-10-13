@@ -42,8 +42,12 @@ const OrderDataTable: React.FC<Props> = ({ carts }) => {
               <Th>
                 <p className="text-center">color</p>
               </Th>
-              <Th isNumeric>quantity</Th>
-              <Th isNumeric>price</Th>
+              <Th>
+                <p className="text-center">quantity</p>
+              </Th>
+              <Th>
+                <p className="text-center">price</p>
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -54,7 +58,7 @@ const OrderDataTable: React.FC<Props> = ({ carts }) => {
                 </Td>
                 {product.size ? (
                   <Td>
-                    size: <span className="font-bold ml-2">{product.size}</span>
+                    <p className="font-bold text-center">{product.size}</p>
                   </Td>
                 ) : (
                   <Td>
@@ -63,19 +67,18 @@ const OrderDataTable: React.FC<Props> = ({ carts }) => {
                 )}
                 {product.color ? (
                   <Td>
-                    color:
-                    <span className="font-bold ml-2">{product.color}</span>
+                    <p className="font-bold text-center">{product.color}</p>
                   </Td>
                 ) : (
                   <Td>
                     <p className="text-center">-</p>
                   </Td>
                 )}
-                <Td isNumeric>
-                  <span className="font-bold">{product.quantity}</span>
+                <Td>
+                  <p className="font-bold text-center">{product.quantity}</p>
                 </Td>
-                <Td isNumeric>
-                  <span className="font-bold">{product.price}</span>
+                <Td>
+                  <p className="font-bold text-center">{product.price}</p>
                 </Td>
               </Tr>
             ))}

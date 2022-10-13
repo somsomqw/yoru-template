@@ -3,10 +3,12 @@ import * as trpc from "@trpc/server";
 import { prisma } from "../../utils/prisma";
 import { Prisma } from "@prisma/client";
 import {
+  inputGetSingleOrderSchema,
   inputRegistOrderSchema,
   outputGetMonthlyOrders,
   outputGetOrdersSchema,
   outputGetOrdersTodaySchema,
+  outputGetSingleOrderSchema,
 } from "../../schema/order.schema";
 
 export const orderRouter = t.router({
@@ -60,6 +62,28 @@ export const orderRouter = t.router({
       throw e;
     }
   }),
+  getSingle: t.procedure
+    .input(inputGetSingleOrderSchema)
+    .output(outputGetSingleOrderSchema)
+    .query(async ({ input }) => {
+      try {
+        const order = await prisma.order.findUnique({
+          where: { id: input.id },
+          include: {
+            products: true,
+          },
+        });
+        return order;
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
   getOrdersToday: t.procedure
     .output(outputGetOrdersTodaySchema)
     .query(async () => {

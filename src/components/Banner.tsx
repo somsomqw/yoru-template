@@ -11,7 +11,6 @@ type Props = {
 
 const Banner: React.FC<Props> = ({ campaigns }) => {
   const [currentBanner, setCurrentBanner] = useState<number>(0);
-
   useEffect(() => {
     const autoMoveBanner = setInterval(
       () =>
@@ -26,6 +25,15 @@ const Banner: React.FC<Props> = ({ campaigns }) => {
     );
     return () => clearInterval(autoMoveBanner);
   }, [campaigns]);
+  if (campaigns?.length === 0) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="w-256 h-156 flex justify-center items-center text-2xl font-bold uppercase bg-gray-200 rounded-lg">
+          No campaign currently exists
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="bg-gray-50">
       <div className="w-screen overflow-hidden flex justify-center">

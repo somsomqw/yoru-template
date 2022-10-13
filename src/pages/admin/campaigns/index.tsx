@@ -21,7 +21,7 @@ const Campaigns: React.FC<Props> = () => {
       </div>
       <Spacer h="10" />
       <CampaignDataTable campaigns={data} refetch={refetch} />
-      <AddModal isOpen={isOpen} onClose={onClose} />
+      <AddModal isOpen={isOpen} onClose={onClose} refetch={refetch} />
     </div>
   );
 };

@@ -3,14 +3,13 @@ import Head from "next/head";
 import Banner from "../components/Banner";
 import Category from "../components/Category";
 import ProductCard from "../components/combination/ProductCard";
-import SearchModal from "../components/SearchModal";
 import { trpc } from "../utils/trpc";
 
 const Home: React.FC = () => {
   const { data } = trpc.product.get.useQuery();
   const { data: campaigns } = trpc.campaign.get.useQuery();
   return (
-    <div>
+    <div className="bg-gray-50">
       <Head>
         <title>e-commerce template</title>
         <meta name="description" content="" />

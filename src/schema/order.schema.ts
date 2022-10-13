@@ -6,6 +6,10 @@ export const inputRegistOrderSchema = z.object({
   cartData: z.number().array(),
 });
 
+export const inputGetSingleOrderSchema = z.object({
+  id: z.string(),
+});
+
 export const outputGetOrdersSchema = z
   .object({
     id: z.string(),
@@ -37,6 +41,27 @@ export const outputGetMonthlyOrders = z.object({
   nov: z.object({ totalPrice: z.number() }).array(),
   dec: z.object({ totalPrice: z.number() }).array(),
 });
+
+export const outputGetSingleOrderSchema = z.nullable(
+  z.object({
+    id: z.string(),
+    userEmail: z.string(),
+    products: z
+      .object({
+        id: z.number(),
+        productId: z.number(),
+        title: z.string(),
+        size: z.nullable(z.string()),
+        color: z.nullable(z.string()),
+        quantity: z.number(),
+        price: z.number(),
+      })
+      .array(),
+    status: z.string(),
+    totalPrice: z.number(),
+    createdAt: z.date(),
+  })
+);
 
 export type InputRegistOrderSchema = z.TypeOf<typeof inputRegistOrderSchema>;
 export type OutputGetOrdersSchema = z.TypeOf<typeof outputGetOrdersSchema>;

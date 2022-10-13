@@ -8,7 +8,6 @@ import {
 } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Category from "../../components/Category";
@@ -69,16 +68,6 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
     <div className="p-10 flex">
       <Category />
       <div>
-        {/* <Image
-          src={
-            data?.thumbnail ??
-            process.env.PRODUCT_DEFAULT_IMAGE ??
-            "/assets/default.png"
-          }
-          width={500}
-          height={500}
-          layout="fixed"
-        /> */}
         <ProductImages thumbnail={data?.thumbnail} images={data?.images} />
         <Center>
           <Text className="w-112">{data?.description}</Text>

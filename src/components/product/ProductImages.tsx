@@ -47,16 +47,18 @@ const ProductImages: React.FC<Props> = ({ thumbnail, images }) => {
           height="500px"
         />
       )}
-
-      <Image
-        src={selectedImage ?? ""}
-        width={500}
-        height={500}
-        onLoadingComplete={() => setIsImageLoading(false)}
-      />
+      {selectedImage && (
+        <Image
+          src={selectedImage}
+          width={500}
+          height={500}
+          onLoadingComplete={() => setIsImageLoading(false)}
+        />
+      )}
       <div className="flex gap-2">
-        {images?.map((image) => (
+        {images?.map((image, index) => (
           <div
+            key={index}
             className={`cursor-pointer`}
             onClick={() => {
               setIsImageLoading(true);
