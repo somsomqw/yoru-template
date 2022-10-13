@@ -10,28 +10,39 @@ import {
   Spacer,
   Divider,
 } from "@chakra-ui/react";
-type Props = {};
+import { OutputGetOrdersTodaySchema } from "../../../schema/order.schema";
+type Props = {
+  statData: OutputGetOrdersTodaySchema | undefined;
+};
 
-const RevenueStat = (props: Props) => {
+const RevenueStat: React.FC<Props> = ({ statData }) => {
   return (
-    <div className="p-4">
-      <Text className="font-bold text-2xl">Revenue</Text>
+    <div className="p-4 border rounded-lg">
+      <Text className="font-bold text-2xl">Growth Rate</Text>
       <Spacer h={6} />
       <StatGroup>
         <Stat className="p-4 border-r">
           <StatLabel>Daily</StatLabel>
-          <StatNumber>345,670</StatNumber>
+          <StatNumber>{statData?.dailyTotal}</StatNumber>
           <StatHelpText>
-            <StatArrow type="increase" />
-            23.36%
+            {statData && statData.dailyGrowthRate < 0 ? (
+              <StatArrow type="decrease" />
+            ) : (
+              <StatArrow type="increase" />
+            )}
+            {statData?.dailyGrowthRate}%
           </StatHelpText>
         </Stat>
         <Stat className="p-4">
           <StatLabel>Monthly</StatLabel>
-          <StatNumber>45</StatNumber>
+          <StatNumber>{statData?.monthlyTotal}</StatNumber>
           <StatHelpText>
-            <StatArrow type="decrease" />
-            9.05%
+            {statData && statData.monthlyGrowthRate < 0 ? (
+              <StatArrow type="decrease" />
+            ) : (
+              <StatArrow type="increase" />
+            )}
+            {statData?.monthlyGrowthRate}%
           </StatHelpText>
         </Stat>
       </StatGroup>

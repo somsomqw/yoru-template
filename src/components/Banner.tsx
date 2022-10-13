@@ -33,11 +33,11 @@ const Banner: React.FC<Props> = ({ campaigns }) => {
           style={{
             transform: `translate(-${currentBanner * 100}%)`,
           }}
-          className="w-268 h-full flex justify-start transition duration-500"
+          className="w-256 h-full flex transition duration-500"
         >
           {campaigns?.map((campaign, index) => (
             <Link key={campaign.id} href={`/campaign/${campaign.id}`}>
-              <div className="p-6 cursor-pointer">
+              <div className="cursor-pointer">
                 <div
                   className={`w-256 h-156 relative ${
                     index !== currentBanner && "opacity-80 scale-95"

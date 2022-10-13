@@ -22,12 +22,18 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
-  VStack,
   Text,
+  Modal,
+  Spinner,
+  ModalContent,
+  ModalOverlay,
+  ModalHeader,
+  ModalBody,
 } from "@chakra-ui/react";
 import { trpc } from "../../../../utils/trpc";
-import { EditProductInput } from "../../../../schema/product.schema";
 import { useRouter } from "next/router";
+import useCloudinaryUpload from "../../../../hooks/useCloudinaryUpload";
+import Image from "next/image";
 
 type Props = {
   id: number;
@@ -57,6 +63,8 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
       router.push("/admin/products");
     },
   });
+
+  //States
   const [options, setOptions] = useState<{
     sizes?: string[];
     colors?: string[];
@@ -73,35 +81,53 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
     discountRate?: number | null;
     categoryId?: number;
   }>();
+  const [thumbnail, setThumbnail] = useState<string>();
+  const [images, setImages] = useState<string[]>();
+  const [thumbnailFile, setThumbnailFile] = useState<File>();
+  const [imageFiles, setImageFiles] = useState<FileList>();
+  const { isLoading, upload } = useCloudinaryUpload({
+    thumbnail: thumbnailFile,
+    images: imageFiles,
+  });
 
   useEffect(() => {
-    console.log(data);
     setOptions({ sizes: data?.size, colors: data?.color });
     setSelectValue({
       discount: data?.discount,
       discountRate: data?.discountRate,
       categoryId: data?.categoryId,
     });
+    setThumbnail(data?.thumbnail);
+    setImages(data?.images);
   }, [data]);
 
-  const onSubmit = (e: any) => {
-    e.preventDefault();
-    const editInfo = {
-      id: Number(id),
-      title: String(e.target.title.value) ?? "",
-      description: String(e.target.description.value) ?? "",
-      discount: selectValue?.discount ?? false,
-      discountRate: selectValue?.discountRate ?? null,
-      price: Number(e.target.price.value),
-      quantity: Number(e.target.quantity.value),
-      categoryId: selectValue?.categoryId ?? 0,
-      size: options.sizes ?? [],
-      color: options.colors ?? [],
-      thumbnail:
-        "https://i.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI",
-      images: [],
-    };
-    mutate(editInfo);
+  const onSubmit = async (e: any) => {
+    try {
+      e.preventDefault();
+      const uploadData = await upload();
+      const editInfo = {
+        id: Number(id),
+        title: String(e.target.title.value) ?? "",
+        description: String(e.target.description.value) ?? "",
+        discount: selectValue?.discount ?? false,
+        discountRate: selectValue?.discountRate ?? null,
+        price: Number(e.target.price.value),
+        quantity: Number(e.target.quantity.value),
+        categoryId: selectValue?.categoryId ?? 0,
+        size: options.sizes ?? [],
+        color: options.colors ?? [],
+        thumbnail: uploadData.thumbnail,
+        images: uploadData.images,
+      };
+      mutate(editInfo);
+    } catch (e) {
+      toast({
+        title: "Image upload failed.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
   return (
     <div className="p-10">
@@ -233,7 +259,26 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
           </Select>
           <Spacer h="5" />
           <FormLabel>thumbnail</FormLabel>
+          {thumbnail && <Image src={thumbnail} width={200} height={200} />}
+          <input
+            type="file"
+            onChange={(e) => {
+              if (e.target.files) setThumbnailFile(e.target.files[0]);
+            }}
+          />
           <FormLabel>other images</FormLabel>
+          {images &&
+            images.map((image, index) => (
+              <Image key={index} src={image} width={200} height={200} />
+            ))}
+          <input
+            type="file"
+            multiple
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0)
+                setImageFiles(e.target.files);
+            }}
+          />
           <FormLabel>Other options</FormLabel>
           <Accordion allowToggle>
             <AccordionItem>
@@ -368,6 +413,17 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
           EDIT
         </Button>
       </form>
+      <Modal isOpen={isLoading} onClose={() => {}} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Image uploading...</ModalHeader>
+          <ModalBody>
+            <div className="flex justify-center items-center h-40">
+              <Spinner size="lg" />
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
