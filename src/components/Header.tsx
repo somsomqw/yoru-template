@@ -68,7 +68,9 @@ const Header: React.FC<Props> = () => {
             </div>
             {session.status === "authenticated" ? (
               <>
-                <IconButton icon={<BiUser />} aria-label="profile" />
+                <Link href="/profile">
+                  <IconButton icon={<BiUser />} aria-label="profile" />
+                </Link>
                 <Button onClick={() => signOut()}>SIGN OUT</Button>
               </>
             ) : (
