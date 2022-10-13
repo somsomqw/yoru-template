@@ -45,7 +45,7 @@ export const userRouter = t.router({
       try {
         await prisma.user.update({
           where: {
-            email: input.motoEmail,
+            email: input.email,
           },
           data: {
             email: input.email,

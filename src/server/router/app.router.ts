@@ -6,6 +6,7 @@ import { categoryRouter } from "./category.router";
 import { orderRouter } from "./order.router";
 import { productRouter } from "./product.router";
 import { userRouter } from "./user.router";
+import { addressRouter } from "./address.router";
 
 export const appRouter = t.router({
   user: userRouter,
@@ -15,4 +16,5 @@ export const appRouter = t.router({
   cart: cartRouter,
   campaign: campaignRouter,
   order: orderRouter,
+  address: addressRouter,
 });

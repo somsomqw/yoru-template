@@ -24,12 +24,12 @@ const Profile: React.FC<Props> = ({ email }) => {
   const onSubmit = (e: any) => {
     e.preventDefault();
     const editInfo = {
-      motoEmail: email,
       email: String(e.target.email.value) ?? "",
       password: String(e.target.password.value) ?? "",
-    };console.log(editInfo.email)
+    };
     mutate(editInfo);
     setEdit(!edit)
+    setShow(false)
   };
 
   const {mutate} = trpc.user.edit.useMutation({
@@ -53,10 +53,9 @@ const Profile: React.FC<Props> = ({ email }) => {
   return (
     <div className="min-h-screen pl-60 pr-60">
       <Text className="font-bold text-3xl p-10">My Account</Text>
-      <div className="flex justify-Center">
+      <div className="flex justify-between">
         <Sidemenu />
         <Box w="50rem" h="100rem" bg="gray.100" rounded="md" p="10" shadow="lg">
-          
           <form method="POST" onSubmit={onSubmit}>
             <div className="flex justify-between">
               <Text className="font-bold text-2xl pb-5">My details</Text>

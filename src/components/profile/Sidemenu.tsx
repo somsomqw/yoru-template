@@ -26,6 +26,7 @@ const Sidemenu: React.FC<Props> = () => {
     <div className="flex justify-between">
       <div className="w-56 flex flex-col">
         <Item to="/profile">My details</Item>
+        <Item to="/profile/addresses">My addresses</Item>
         <Item to="/profile/orders">My orders</Item>
       </div>
     </div>

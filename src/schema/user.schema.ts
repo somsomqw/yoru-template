@@ -15,7 +15,6 @@ export const getUserEmailSchema = z.object({
 });
 
 export const editUserSchema = z.object({
-  motoEmail: z.string(),
   email: z.string(),
   password: z.string(),
 });
