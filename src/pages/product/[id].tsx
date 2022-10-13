@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Category from "../../components/Category";
 import Counter from "../../components/combination/Counter";
+import ProductImages from "../../components/product/ProductImages";
 import { useCartCounter } from "../../context/CartContext";
 import { trpc } from "../../utils/trpc";
 
@@ -68,12 +69,17 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
     <div className="p-10 flex">
       <Category />
       <div>
-        <Image
-          src="https://i.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI"
+        {/* <Image
+          src={
+            data?.thumbnail ??
+            process.env.PRODUCT_DEFAULT_IMAGE ??
+            "/assets/default.png"
+          }
           width={500}
-          height={750}
+          height={500}
           layout="fixed"
-        />
+        /> */}
+        <ProductImages thumbnail={data?.thumbnail} images={data?.images} />
         <Center>
           <Text className="w-112">{data?.description}</Text>
         </Center>

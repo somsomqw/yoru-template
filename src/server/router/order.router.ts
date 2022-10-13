@@ -180,6 +180,7 @@ export const orderRouter = t.router({
         const year = date.getFullYear();
         const jan = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-1`),
               lt: new Date(`${year}-2`),
@@ -188,6 +189,7 @@ export const orderRouter = t.router({
         });
         const feb = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-2`),
               lt: new Date(`${year}-3`),
@@ -196,6 +198,7 @@ export const orderRouter = t.router({
         });
         const mar = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-3`),
               lt: new Date(`${year}-4`),
@@ -204,6 +207,7 @@ export const orderRouter = t.router({
         });
         const apr = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-4`),
               lt: new Date(`${year}-5`),
@@ -212,6 +216,7 @@ export const orderRouter = t.router({
         });
         const may = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-5`),
               lt: new Date(`${year}-6`),
@@ -220,6 +225,7 @@ export const orderRouter = t.router({
         });
         const jun = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-6`),
               lt: new Date(`${year}-7`),
@@ -228,6 +234,7 @@ export const orderRouter = t.router({
         });
         const jul = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-7`),
               lt: new Date(`${year}-8`),
@@ -236,6 +243,7 @@ export const orderRouter = t.router({
         });
         const aug = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-8`),
               lt: new Date(`${year}-9`),
@@ -244,6 +252,7 @@ export const orderRouter = t.router({
         });
         const sep = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-9`),
               lt: new Date(`${year}-10`),
@@ -252,6 +261,7 @@ export const orderRouter = t.router({
         });
         const oct = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-10`),
               lt: new Date(`${year}-11`),
@@ -260,6 +270,7 @@ export const orderRouter = t.router({
         });
         const nov = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-11`),
               lt: new Date(`${year}-12`),
@@ -268,6 +279,7 @@ export const orderRouter = t.router({
         });
         const dec = await prisma.order.findMany({
           where: {
+            status: "PROGRESS_FINISHIED",
             createdAt: {
               gte: new Date(`${year}-12`),
             },

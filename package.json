@@ -26,8 +26,8 @@
     "next-auth": "^4.12.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "recharts": "2.1.12",
     "react-icons": "^4.4.0",
+    "recharts": "2.1.12",
     "superjson": "^1.10.0",
     "zod": "^3.19.1"
   },

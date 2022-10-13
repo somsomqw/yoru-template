@@ -2,6 +2,7 @@ import { Button, Spacer, Text, useToast } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
+import OrderDataTable from "../components/order/OrderDataTable";
 import { useCartCounter } from "../context/CartContext";
 import { trpc } from "../utils/trpc";
 
@@ -50,6 +51,7 @@ const Order: React.FC<Props> = ({ userEmail, cartId }) => {
     <div className="p-10">
       <Text className="text-3xl font-bold">Order details</Text>
       <Spacer h={10} />
+      <OrderDataTable carts={data} />
       <Button className="w-full" colorScheme="teal" onClick={onClick}>
         ORDER
       </Button>
