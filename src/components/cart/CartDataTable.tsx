@@ -45,8 +45,8 @@ const CartDataTable: React.FC<Props> = ({ carts, refetch }) => {
     },
   });
 
-  const onClickDelete = (e: any, index: number) => {
-    mutate({ cartDataId: index });
+  const onClickDelete = (e: any, id: string) => {
+    mutate({ cartDataId: id });
   };
 
   useEffect(() => {

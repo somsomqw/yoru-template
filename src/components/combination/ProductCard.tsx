@@ -5,7 +5,7 @@ import React, { useRef } from "react";
 import { getDiscountPrice } from "../../utils/caculate";
 
 type Props = {
-  id: number;
+  id: string;
   url: string;
   title: string;
   price: number;
@@ -23,7 +23,7 @@ const ProductCard: React.FC<Props> = ({
 }) => {
   const skeletonRef = useRef<HTMLDivElement>(null);
   return (
-    <Link href={`product/${id}`}>
+    <Link href={`/product/${id}`}>
       <div className="h-72 shadow-md cursor-pointer hover:opacity-80 transition-all">
         <div className="relative">
           <Skeleton

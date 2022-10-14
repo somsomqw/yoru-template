@@ -17,14 +17,14 @@ import { useCartCounter } from "../../context/CartContext";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
-  id: number;
+  id: string;
   cartId: string | null;
 };
 
 const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
   const toast = useToast();
   const router = useRouter();
-  const { data } = trpc.product.getSingle.useQuery({ id: Number(id) });
+  const { data } = trpc.product.getSingle.useQuery({ id });
   const { mutate } = trpc.cart.regist.useMutation({
     onError: () =>
       toast({
@@ -56,7 +56,7 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
       cartId
         ? mutate({
             cartId,
-            productId: Number(id),
+            productId: id,
             ...options,
             title: data.title,
             price: options.quantity * data.price,

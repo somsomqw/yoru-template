@@ -63,13 +63,6 @@ const RevenueChart: React.FC<Props> = ({ monthlyOrders }) => {
           fillOpacity={1}
           fill="url(#colorUv)"
         />
-        {/* <Area
-          type="monotone"
-          dataKey="pv"
-          stroke="#82ca9d"
-          fillOpacity={1}
-          fill="url(#colorPv)"
-        /> */}
       </AreaChart>
     </div>
   );

@@ -1,7 +1,7 @@
 import z, { number } from "zod";
 
 export const registCartSchema = z.object({
-  productId: z.number(),
+  productId: z.string(),
   title: z.string(),
   size: z.nullable(z.string()),
   color: z.nullable(z.string()),
@@ -18,8 +18,8 @@ export const outputGetCartSchema = z.object({
   products: z.nullable(
     z
       .object({
-        id: z.number(),
-        productId: z.number(),
+        id: z.string(),
+        productId: z.string(),
         title: z.string(),
         size: z.nullable(z.string()),
         color: z.nullable(z.string()),
@@ -31,7 +31,7 @@ export const outputGetCartSchema = z.object({
 });
 
 export const inputDeleteCartSchema = z.object({
-  cartDataId: z.number(),
+  cartDataId: z.string(),
 });
 
 export type OutputGetCart = z.TypeOf<typeof outputGetCartSchema>;

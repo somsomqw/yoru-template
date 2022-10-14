@@ -34,7 +34,7 @@ export const productRouter = t.router({
       throw e;
     }
   }),
-  get: t.procedure.output(outputTableProductsSchema).query(async ({ ctx }) => {
+  get: t.procedure.output(outputTableProductsSchema).query(async () => {
     try {
       const products = await prisma.product.findMany({
         include: { category: true },

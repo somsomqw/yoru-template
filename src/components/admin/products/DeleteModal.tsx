@@ -9,14 +9,13 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Text,
 } from "@chakra-ui/react";
 import { trpc } from "../../../utils/trpc";
 
 type DeleteModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  selected: number;
+  selected: string;
 };
 
 const DeleteModal: React.FC<DeleteModalProps> = ({

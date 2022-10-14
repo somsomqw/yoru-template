@@ -1,10 +1,8 @@
-import { Spacer, Text } from "@chakra-ui/react";
+import { Spacer } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import React from "react";
 import OrderDataTable from "../../components/admin/orders/OrderDataTable";
-// import RevenueChart from "../../components/admin/orders/RevenueChart";
 import RevenueStat from "../../components/admin/orders/RevenueStat";
 import { trpc } from "../../utils/trpc";
 import dynamic from "next/dynamic";

@@ -15,7 +15,7 @@ export const registProductSchema = z.object({
 });
 
 export const editProductSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   description: z.string(),
   discount: z.boolean(),
@@ -30,7 +30,7 @@ export const editProductSchema = z.object({
 });
 
 export const tableSingleProductSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   discount: z.boolean(),
   price: z.number(),
@@ -45,11 +45,11 @@ export const inputGetProductsByCategoryId = z.object({
 });
 
 export const getSingleProductSchema = z.object({
-  id: z.number(),
+  id: z.string(),
 });
 
 export const deleteProductSchema = z.object({
-  id: z.number(),
+  id: z.string(),
 });
 
 export const outputTableProductsSchema = tableSingleProductSchema
@@ -58,7 +58,7 @@ export const outputTableProductsSchema = tableSingleProductSchema
 
 export const outputSingleProductSchema = z.nullable(
   z.object({
-    id: z.number(),
+    id: z.string(),
     title: z.string(),
     description: z.string(),
     discount: z.boolean(),
@@ -80,7 +80,7 @@ export const inputSearchByTitle = z.object({
 export const outputSearchByTitle = z.nullable(
   z
     .object({
-      id: z.number(),
+      id: z.string(),
       title: z.string(),
       discount: z.boolean(),
       discountRate: z.nullable(z.number()),

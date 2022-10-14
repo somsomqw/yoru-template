@@ -3,7 +3,7 @@ import z from "zod";
 export const inputRegistOrderSchema = z.object({
   userEmail: z.string(),
   totalPrice: z.number(),
-  cartData: z.number().array(),
+  cartData: z.string().array(),
 });
 
 export const inputGetSingleOrderSchema = z.object({
@@ -48,8 +48,8 @@ export const outputGetSingleOrderSchema = z.nullable(
     userEmail: z.string(),
     products: z
       .object({
-        id: z.number(),
-        productId: z.number(),
+        id: z.string(),
+        productId: z.string(),
         title: z.string(),
         size: z.nullable(z.string()),
         color: z.nullable(z.string()),
