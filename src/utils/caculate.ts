@@ -38,3 +38,23 @@ export const convertDateToString = (date: Date) => {
   }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
   return format;
 };
+
+//check password security
+export type PasswordSecurityLevel = "strong" | "medium" | "weak";
+export const passwordSecurityCheck = (
+  password: string
+): PasswordSecurityLevel => {
+  const strong = new RegExp(
+    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
+  );
+  const medium = new RegExp(
+    "^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})"
+  );
+  if (strong.test(password)) {
+    return "strong";
+  } else if (medium.test(password)) {
+    return "medium";
+  } else {
+    return "weak";
+  }
+};
