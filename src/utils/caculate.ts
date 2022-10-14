@@ -1,5 +1,3 @@
-import { OrderStatus } from "@prisma/client";
-
 // calculate discounted price
 export const getDiscountPrice = (
   price: number,

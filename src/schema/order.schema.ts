@@ -57,7 +57,15 @@ export const outputGetSingleOrderSchema = z.nullable(
         price: z.number(),
       })
       .array(),
-    status: z.string(),
+    status: z.enum([
+      "PAYMENT_SUCCESS",
+      "PAYMENT_PROCEED",
+      "DELIVERY_SUCCESS",
+      "DELIVERY_PROCEED",
+      "DELIVERY_READY",
+      "ORDER_CANCEL",
+      "PROGRESS_FINISHIED",
+    ]),
     totalPrice: z.number(),
     createdAt: z.date(),
   })
