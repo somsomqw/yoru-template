@@ -6,6 +6,7 @@ const nextConfig = {
     domains: ["i.picsum.photos", "upload.wikimedia.org", "res.cloudinary.com"],
   },
   env: {
+    HOST_URL: "http://localhost:3000",
     CLOUDINARY_CLOUD: "https://api.cloudinary.com/v1_1/doxgf1mhn/image/upload",
     PRODUCT_DEFAULT_IMAGE: "/assets/default.png",
   },

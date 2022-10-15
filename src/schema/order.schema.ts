@@ -10,6 +10,19 @@ export const inputGetSingleOrderSchema = z.object({
   id: z.string(),
 });
 
+export const inputEditOrderStatus = z.object({
+  id: z.string(),
+  status: z.enum([
+    "PAYMENT_SUCCESS",
+    "PAYMENT_PROCEED",
+    "DELIVERY_SUCCESS",
+    "DELIVERY_PROCEED",
+    "DELIVERY_READY",
+    "ORDER_CANCEL",
+    "PROGRESS_FINISHIED",
+  ]),
+});
+
 export const outputGetOrdersSchema = z
   .object({
     id: z.string(),
@@ -70,6 +83,18 @@ export const outputGetSingleOrderSchema = z.nullable(
     createdAt: z.date(),
   })
 );
+
+export const outputEditOrderStatus = z.object({
+  status: z.enum([
+    "PAYMENT_SUCCESS",
+    "PAYMENT_PROCEED",
+    "DELIVERY_SUCCESS",
+    "DELIVERY_PROCEED",
+    "DELIVERY_READY",
+    "ORDER_CANCEL",
+    "PROGRESS_FINISHIED",
+  ]),
+});
 
 export type InputRegistOrderSchema = z.TypeOf<typeof inputRegistOrderSchema>;
 export type OutputGetOrdersSchema = z.TypeOf<typeof outputGetOrdersSchema>;

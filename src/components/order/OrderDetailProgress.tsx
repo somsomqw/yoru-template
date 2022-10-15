@@ -15,7 +15,7 @@ const OrderDetailProgress: React.FC<Props> = ({ status }) => {
           <Box className="w-full h-full flex flex-col items-center justify-center">
             <Circle
               color={`${
-                status === "PAYMENT_PROCEED" ? "blue.400" : "gray.400"
+                status === "PAYMENT_PROCEED" ? "teal.500" : "gray.400"
               }`}
             >
               <FaDotCircle />
@@ -28,7 +28,7 @@ const OrderDetailProgress: React.FC<Props> = ({ status }) => {
           <Box className="w-full h-full flex flex-col items-center justify-center">
             <Circle
               color={`${
-                status === "PAYMENT_SUCCESS" ? "blue.400" : "gray.400"
+                status === "PAYMENT_SUCCESS" ? "teal.500" : "gray.400"
               }`}
             >
               <FaDotCircle />
@@ -40,7 +40,7 @@ const OrderDetailProgress: React.FC<Props> = ({ status }) => {
         <Square size="32">
           <Box className="w-full h-full flex flex-col items-center justify-center">
             <Circle
-              color={`${status === "DELIVERY_READY" ? "blue.400" : "gray.400"}`}
+              color={`${status === "DELIVERY_READY" ? "teal.500" : "gray.400"}`}
             >
               <FaDotCircle />
             </Circle>
@@ -52,7 +52,7 @@ const OrderDetailProgress: React.FC<Props> = ({ status }) => {
           <Box className="w-full h-full flex flex-col items-center justify-center">
             <Circle
               color={`${
-                status === "DELIVERY_PROCEED" ? "blue.400" : "gray.400"
+                status === "DELIVERY_PROCEED" ? "teal.500" : "gray.400"
               }`}
             >
               <FaDotCircle />
@@ -65,7 +65,7 @@ const OrderDetailProgress: React.FC<Props> = ({ status }) => {
           <Box className="w-full h-full flex flex-col items-center justify-center">
             <Circle
               color={`${
-                status === "DELIVERY_SUCCESS" ? "blue.400" : "gray.400"
+                status === "DELIVERY_SUCCESS" ? "teal.500" : "gray.400"
               }`}
             >
               <FaDotCircle />
@@ -77,7 +77,7 @@ const OrderDetailProgress: React.FC<Props> = ({ status }) => {
         <Square size="32">
           <Box className="w-full h-full flex flex-col items-center justify-center">
             <Circle
-              color={`${status === "ORDER_CANCEL" ? "blue.400" : "gray.400"}`}
+              color={`${status === "ORDER_CANCEL" ? "teal.500" : "gray.400"}`}
             >
               <FaDotCircle />
             </Circle>
@@ -89,7 +89,7 @@ const OrderDetailProgress: React.FC<Props> = ({ status }) => {
           <Box className="w-full h-full flex flex-col items-center justify-center">
             <Circle
               color={`${
-                status === "PROGRESS_FINISHIED" ? "blue.400" : "gray.400"
+                status === "PROGRESS_FINISHIED" ? "teal.500" : "gray.400"
               }`}
             >
               <FaDotCircle />
