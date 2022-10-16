@@ -5,22 +5,31 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Spacer,
+  Spinner,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import React, { useState } from "react";
-import Stars from "../../../../components/review/Stars";
-import useCloudinaryUpload from "../../../../hooks/useCloudinaryUpload";
-import { trpc } from "../../../../utils/trpc";
+import Stars from "../../../../../components/review/Stars";
+import useCloudinaryUpload from "../../../../../hooks/useCloudinaryUpload";
+import { trpc } from "../../../../../utils/trpc";
 
 type Props = {
   productId: string;
   orderId: string;
+  email: string;
 };
 
-const RegistReview: React.FC<Props> = ({ productId, orderId }) => {
+const RegistReview: React.FC<Props> = ({ productId, orderId, email }) => {
+  const toast = useToast();
   //state
   const [score, setScore] = useState<number>(0);
   const [image, setImage] = useState<File>();
@@ -28,15 +37,53 @@ const RegistReview: React.FC<Props> = ({ productId, orderId }) => {
 
   //trpc
   const { data } = trpc.product.getSingle.useQuery({ id: productId });
+  const { data: reviewData } = trpc.review.checkAlreadyRegisted.useQuery({
+    orderId,
+    productId,
+  });
+  const { mutate } = trpc.review.regist.useMutation({
+    onError: () =>
+      toast({
+        title: "レビュー登録に失敗しました。",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+    onSuccess: () =>
+      toast({
+        title: "レビュー登録を完了しました。",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
 
   //functions
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    if (image) {
+    const title = e.target.reviewTitle.value;
+    const description = e.target.reviewDesc.value;
+    if (!reviewData?.isRegisted) {
       const uploadData = await upload();
-      console.log(uploadData);
+      mutate({
+        userEmail: email,
+        orderId,
+        productId,
+        score,
+        image: uploadData.thumbnail,
+        title,
+        description,
+      });
+    } else {
+      toast({
+        title: "該当レビューは既に登録されています。",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
+
   return (
     <Container className="p-10">
       <Box className="p-6 border rounded-lg w-full">
@@ -65,6 +112,7 @@ const RegistReview: React.FC<Props> = ({ productId, orderId }) => {
             <input
               type="file"
               onChange={(e) => e.target.files && setImage(e.target.files[0])}
+              required
             />
             <Spacer h={4} />
 
@@ -85,6 +133,17 @@ const RegistReview: React.FC<Props> = ({ productId, orderId }) => {
           </Button>
         </form>
       </Box>
+      <Modal isOpen={isLoading} onClose={() => {}} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>登録中...</ModalHeader>
+          <ModalBody>
+            <div className="flex justify-center items-center h-40">
+              <Spinner size="lg" />
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };
@@ -96,10 +155,12 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const productId = ctx.params?.productId;
   const orderId = ctx.params?.orderId;
+  const email = ctx.params?.email;
   return {
     props: {
       productId,
       orderId,
+      email,
     },
   };
 };
