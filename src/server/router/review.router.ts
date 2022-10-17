@@ -107,10 +107,13 @@ export const reviewRouter = t.router({
         });
         if (!product) return null;
         else {
-          const reviews = product.reviews.filter(
-            (review) => review.score === input.score
-          );
-          return reviews;
+          if (input.score === -1) {
+            return product.reviews;
+          } else {
+            return product.reviews.filter(
+              (review) => review.score === input.score
+            );
+          }
         }
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {

@@ -32,7 +32,6 @@ export const outputGetProductReviewsSchema = z.nullable(
   z
     .object({
       id: z.string(),
-      userEmail: z.string(),
       score: z.number(),
       image: z.string(),
       title: z.string(),

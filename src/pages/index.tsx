@@ -17,20 +17,24 @@ const Home: React.FC = () => {
       </Head>
       <Spacer h={20} />
       <Banner campaigns={campaigns} />
-      <div className="flex min-h-screen pt-16 pl-40 pr-40 bg-gray-50">
-        <Category />
-        <div className="flex flex-wrap gap-4">
-          {data?.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              url={product.thumbnail}
-              title={product.title}
-              price={product.price}
-              discount={product.discount}
-              discountRate={product.discountRate}
-            />
-          ))}
+      <div className="flex pb-20 laptop:pl-40 laptop:pr-40 pt-16 mobile:pr-2 mobile:pl-2">
+        <div className="mobile:hidden">
+          <Category />
+        </div>
+        <div className="mobile:overflow-auto mobile:p-4">
+          <div className="flex laptop:flex-wrap gap-4">
+            {data?.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                url={product.thumbnail}
+                title={product.title}
+                price={product.price}
+                discount={product.discount}
+                discountRate={product.discountRate}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

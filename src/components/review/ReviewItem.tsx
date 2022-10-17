@@ -13,7 +13,7 @@ type Props = {
 const ReviewItem: React.FC<Props> = ({ title, description, image, score }) => {
   const [readMore, setReadMore] = useState<boolean>(false);
   return (
-    <Box>
+    <Box className="border p-2 rounded mb-2">
       <Box>
         <Stars score={score} />
       </Box>

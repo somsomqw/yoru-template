@@ -31,7 +31,7 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
   const router = useRouter();
 
   //state
-  const [score, setScore] = useState<number>(5);
+  const [score, setScore] = useState<number>(-1);
   //trpc
   const { data } = trpc.product.getSingle.useQuery({ id });
   const { data: reviewData } = trpc.review.getProductReviews.useQuery({ id });
@@ -83,6 +83,9 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
           <Category />
         </div>
         <div>
+          <Text className="text-2xl font-bold mb-2 laptop:hidden">
+            {data?.title}
+          </Text>
           <ProductImages thumbnail={data?.thumbnail} images={data?.images} />
           <Center>
             <Text className="laptop:w-112">{data?.description}</Text>
@@ -90,13 +93,16 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
         </div>
         <form method="POST" onSubmit={onSubmit}>
           <div className="p-12 laptop:w-128 mobile:w-96">
-            <Text className="text-2xl font-bold mb-2">{data?.title}</Text>
+            <Text className="text-2xl font-bold mb-2 mobile:hidden">
+              {data?.title}
+            </Text>
             <Text className="text-2xl font-bold">￥{data?.price}</Text>
             {data?.size && data.size.length > 0 && (
               <div>
-                <Text>Size</Text>
+                <Spacer h={6} />
+                <Text className="font-bold">サイズ</Text>
                 <Select
-                  placeholder="please select"
+                  placeholder="選択してください"
                   onChange={(e) =>
                     setOptions((prev) => ({ ...prev, size: e.target.value }))
                   }
@@ -112,9 +118,10 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
             )}
             {data?.color && data.color.length > 0 && (
               <div>
-                <Text>Color</Text>
+                <Spacer h={6} />
+                <Text className="font-bold">色</Text>
                 <Select
-                  placeholder="please select"
+                  placeholder="選択してください"
                   onChange={(e) =>
                     setOptions((prev) => ({ ...prev, color: e.target.value }))
                   }
@@ -128,8 +135,9 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
                 </Select>
               </div>
             )}
+            <Spacer h={6} />
             <div>
-              <Text>Quantity</Text>
+              <Text className="font-bold">数量</Text>
               <Center>
                 <Counter
                   count={options.quantity}
@@ -150,6 +158,7 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
                 />
               </Center>
             </div>
+            <Spacer h={6} />
             <VStack spacing={4}>
               <Button
                 type="submit"
@@ -184,11 +193,12 @@ const ProductDetail: React.FC<Props> = ({ id, cartId }) => {
             <Text className="font-bold text-xl">フィルター</Text>
             <Spacer h={4} />
             <Select
-              defaultValue={5}
+              defaultValue={-1}
               onChange={(e) => {
                 setScore(Number(e.target.value));
               }}
             >
+              <option value={-1}>全て</option>
               <option value={5}>星5</option>
               <option value={4}>星4</option>
               <option value={3}>星3</option>

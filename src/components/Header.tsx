@@ -9,9 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { BiSearch, BiUser, BiCart } from "react-icons/bi";
+import React from "react";
+import { BiSearch, BiUser, BiCart, BiMenu } from "react-icons/bi";
 import { useCartCounter } from "../context/CartContext";
+import MobileMenu from "./MobileMenu";
 import SearchModal from "./SearchModal";
 
 type Props = {};
@@ -20,20 +21,29 @@ const Header: React.FC<Props> = () => {
   const [count] = useCartCounter();
   const session = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: menuIsOpen,
+    onOpen: menuOnOpen,
+    onClose: menuOnClose,
+  } = useDisclosure();
   return (
     <>
       <div className="fixed w-full pl-4 pr-4 h-16 flex justify-between shadow-md bg-gray-200 z-50">
+        <div className="h-full flex items-center laptop:hidden">
+          <IconButton
+            aria-label="mobile-menu"
+            icon={<BiMenu />}
+            onClick={menuOnOpen}
+          />
+        </div>
         <Link href="/">
           <div className="h-full flex items-center cursor-pointer">
             <Text className="font-bold text-lg">TEMPLATE</Text>
           </div>
         </Link>
-        <form
-          className="h-full flex items-center"
-          method="GET"
-          action="/search"
-        >
+        <div className="h-full flex items-center">
           <Input
+            className="mobile:hidden"
             type="text"
             placeholder="Search"
             variant="filled"
@@ -48,9 +58,10 @@ const Header: React.FC<Props> = () => {
             aria-label="search product"
             roundedTopLeft="none"
             roundedBottomLeft="none"
+            onClick={onOpen}
           />
-        </form>
-        <div className="h-full flex items-center">
+        </div>
+        <div className="h-full flex items-center mobile:hidden">
           <ButtonGroup>
             <div className="relative">
               <Link href="/cart">
@@ -71,26 +82,27 @@ const Header: React.FC<Props> = () => {
                 <Link href="/profile">
                   <IconButton icon={<BiUser />} aria-label="profile" />
                 </Link>
-                <Button onClick={() => signOut()}>SIGN OUT</Button>
+                <Button onClick={() => signOut()}>サインアウト</Button>
               </>
             ) : (
               <>
                 <Link href="/signin">
-                  <Button>SIGN IN</Button>
+                  <Button>サインイン</Button>
                 </Link>
                 <Link href="/signup">
-                  <Button>SIGN UP</Button>
+                  <Button>会員登録</Button>
                 </Link>
               </>
             )}
             {session.data?.isAdmin ? (
               <Link href="/admin">
-                <Button>ADMIN</Button>
+                <Button>管理画面</Button>
               </Link>
             ) : null}
           </ButtonGroup>
         </div>
       </div>
+      <MobileMenu isOpen={menuIsOpen} onClose={menuOnClose} />
       <SearchModal isOpen={isOpen} onClose={onClose} />
     </>
   );
