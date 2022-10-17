@@ -17,7 +17,7 @@ model User {
   isAdmin Boolean @default(false)
   cart Cart?
   order Order[]
-  address Address?
+  address Address[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -87,7 +87,7 @@ model Order {
 
 model Address {
   id String @id @default(uuid())
-  userEmail String @unique
+  userEmail String
   user User @relation(fields: [userEmail], references: [email])
   nameKanji String
   nameKana String
