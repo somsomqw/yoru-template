@@ -18,3 +18,29 @@ export const inputCheckAlreadyRegistedSchema = z.object({
 export const outputCheckAlreadyRegistedSchema = z.object({
   isRegisted: z.boolean(),
 });
+
+export const inputGetProductReviewsSchema = z.object({
+  id: z.string(),
+});
+
+export const inputGetProductReviewsByScore = z.object({
+  id: z.string(),
+  score: z.number(),
+});
+
+export const outputGetProductReviewsSchema = z.nullable(
+  z
+    .object({
+      id: z.string(),
+      userEmail: z.string(),
+      score: z.number(),
+      image: z.string(),
+      title: z.string(),
+      description: z.string(),
+    })
+    .array()
+);
+
+export type OutputGetProductReviewsSchema = z.TypeOf<
+  typeof outputGetProductReviewsSchema
+>;

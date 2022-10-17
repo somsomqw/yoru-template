@@ -4,7 +4,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Badge,
   Box,
   Button,
   HStack,
@@ -20,7 +19,6 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import OrderDetailProgress from "../../../components/order/OrderDetailProgress";
-import { getOrderProgressColor } from "../../../utils/caculate";
 import { trpc } from "../../../utils/trpc";
 
 type Props = {

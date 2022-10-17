@@ -43,7 +43,7 @@ const ProductImages: React.FC<Props> = ({ thumbnail, images }) => {
   }, [thumbnail]);
   return (
     <>
-      <Box className="relative" width="500px" height="500px">
+      <Box className="relative w-500px h-500px mobile:w-300px mobile:h-300px">
         {isImageLoading && (
           <Skeleton
             className="absolute top-0 z-10"
