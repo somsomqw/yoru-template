@@ -18,6 +18,7 @@ model User {
   cart Cart?
   order Order[]
   address Address[]
+  reviews Review[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -29,7 +30,7 @@ model Category {
 }
 
 model Product {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   title String
   description String
   discount Boolean
@@ -38,6 +39,7 @@ model Product {
   quantity Int
   categoryId Int
   category Category @relation(fields: [categoryId], references: [id])
+  reviews Review[]
   thumbnail String
   images String[]
   size String[]
@@ -54,8 +56,8 @@ model Cart {
 }
 
 model CartData {
-  id Int @id @default(autoincrement())
-  productId Int
+  id String @id @default(uuid())
+  productId String
   title String
   size String?
   color String?
@@ -96,6 +98,21 @@ model Address {
   address1 String
   address2 String
   isDefault Boolean
+}
+
+model Review {
+  id String @id @default(uuid())
+  userEmail String
+  orderId String
+  user User @relation(fields: [userEmail], references: [email])
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+  score Float
+  image String
+  title String
+  description String
+  createdAt DateTime @default(now())
+  @@unique([orderId, productId])
 }
 
 enum OrderStatus {

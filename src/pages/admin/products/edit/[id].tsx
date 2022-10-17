@@ -36,14 +36,14 @@ import useCloudinaryUpload from "../../../../hooks/useCloudinaryUpload";
 import Image from "next/image";
 
 type Props = {
-  id: number;
+  id: string;
 };
 
 const ProductEdit: React.FC<Props> = ({ id }) => {
   const toast = useToast();
   const router = useRouter();
   const { data: categoriesData } = trpc.category.get.useQuery();
-  const { data } = trpc.product.getSingle.useQuery({ id: Number(id) });
+  const { data } = trpc.product.getSingle.useQuery({ id });
   const { mutate } = trpc.product.edit.useMutation({
     onError: (error) =>
       toast({
@@ -106,7 +106,7 @@ const ProductEdit: React.FC<Props> = ({ id }) => {
       e.preventDefault();
       const uploadData = await upload();
       const editInfo = {
-        id: Number(id),
+        id,
         title: String(e.target.title.value) ?? "",
         description: String(e.target.description.value) ?? "",
         discount: selectValue?.discount ?? false,

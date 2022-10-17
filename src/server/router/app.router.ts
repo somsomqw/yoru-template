@@ -7,6 +7,8 @@ import { orderRouter } from "./order.router";
 import { productRouter } from "./product.router";
 import { userRouter } from "./user.router";
 import { addressRouter } from "./address.router";
+import { mailRouter } from "./mail.router";
+import { reviewRouter } from "./review.router";
 
 export const appRouter = t.router({
   user: userRouter,
@@ -17,4 +19,6 @@ export const appRouter = t.router({
   campaign: campaignRouter,
   order: orderRouter,
   address: addressRouter,
+  mail: mailRouter,
+  review: reviewRouter,
 });

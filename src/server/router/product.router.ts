@@ -4,7 +4,9 @@ import {
   deleteProductSchema,
   editProductSchema,
   getSingleProductSchema,
+  inputGetProductsByCategoryId,
   inputSearchByTitle,
+  outputGetProductsByCategoryId,
   outputSearchByTitle,
   outputSingleProductSchema,
   outputTableProductsSchema,
@@ -32,7 +34,7 @@ export const productRouter = t.router({
       throw e;
     }
   }),
-  get: t.procedure.output(outputTableProductsSchema).query(async ({ ctx }) => {
+  get: t.procedure.output(outputTableProductsSchema).query(async () => {
     try {
       const products = await prisma.product.findMany({
         include: { category: true },
@@ -57,6 +59,28 @@ export const productRouter = t.router({
           where: { id: input.id },
         });
         return product;
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
+  getProductsByCategoryId: t.procedure
+    .input(inputGetProductsByCategoryId)
+    .output(outputGetProductsByCategoryId)
+    .query(async ({ input }) => {
+      try {
+        const products = await prisma.product.findMany({
+          where: { categoryId: input.id },
+          include: {
+            category: true,
+          },
+        });
+        return products;
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           throw new trpc.TRPCError({

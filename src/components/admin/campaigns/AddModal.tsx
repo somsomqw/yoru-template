@@ -20,9 +20,10 @@ import { trpc } from "../../../utils/trpc";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  refetch: () => void;
 };
 
-const AddModal: React.FC<Props> = ({ isOpen, onClose }) => {
+const AddModal: React.FC<Props> = ({ isOpen, onClose, refetch }) => {
   const toast = useToast();
 
   const { mutate } = trpc.campaign.regist.useMutation({
@@ -43,6 +44,7 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose }) => {
         isClosable: true,
       });
       onClose();
+      refetch();
     },
   });
 

@@ -25,7 +25,7 @@ const DataTable: React.FC<Props> = ({ products, refetch }) => {
   const { isOpen, onOpen, onClose } = useDisclosure({
     onClose: () => refetch(),
   });
-  const [selected, setSelected] = useState<number>(0);
+  const [selected, setSelected] = useState<string>("");
 
   return (
     <div>

@@ -3,7 +3,24 @@ import z from "zod";
 export const inputRegistOrderSchema = z.object({
   userEmail: z.string(),
   totalPrice: z.number(),
-  cartData: z.number().array(),
+  cartData: z.string().array(),
+});
+
+export const inputGetSingleOrderSchema = z.object({
+  id: z.string(),
+});
+
+export const inputEditOrderStatus = z.object({
+  id: z.string(),
+  status: z.enum([
+    "PAYMENT_SUCCESS",
+    "PAYMENT_PROCEED",
+    "DELIVERY_SUCCESS",
+    "DELIVERY_PROCEED",
+    "DELIVERY_READY",
+    "ORDER_CANCEL",
+    "PROGRESS_FINISHIED",
+  ]),
 });
 
 export const outputGetOrdersSchema = z
@@ -36,6 +53,47 @@ export const outputGetMonthlyOrders = z.object({
   oct: z.object({ totalPrice: z.number() }).array(),
   nov: z.object({ totalPrice: z.number() }).array(),
   dec: z.object({ totalPrice: z.number() }).array(),
+});
+
+export const outputGetSingleOrderSchema = z.nullable(
+  z.object({
+    id: z.string(),
+    userEmail: z.string(),
+    products: z
+      .object({
+        id: z.string(),
+        productId: z.string(),
+        title: z.string(),
+        size: z.nullable(z.string()),
+        color: z.nullable(z.string()),
+        quantity: z.number(),
+        price: z.number(),
+      })
+      .array(),
+    status: z.enum([
+      "PAYMENT_SUCCESS",
+      "PAYMENT_PROCEED",
+      "DELIVERY_SUCCESS",
+      "DELIVERY_PROCEED",
+      "DELIVERY_READY",
+      "ORDER_CANCEL",
+      "PROGRESS_FINISHIED",
+    ]),
+    totalPrice: z.number(),
+    createdAt: z.date(),
+  })
+);
+
+export const outputEditOrderStatus = z.object({
+  status: z.enum([
+    "PAYMENT_SUCCESS",
+    "PAYMENT_PROCEED",
+    "DELIVERY_SUCCESS",
+    "DELIVERY_PROCEED",
+    "DELIVERY_READY",
+    "ORDER_CANCEL",
+    "PROGRESS_FINISHIED",
+  ]),
 });
 
 export type InputRegistOrderSchema = z.TypeOf<typeof inputRegistOrderSchema>;

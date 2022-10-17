@@ -3,10 +3,14 @@ import * as trpc from "@trpc/server";
 import { prisma } from "../../utils/prisma";
 import { Prisma } from "@prisma/client";
 import {
+  inputEditOrderStatus,
+  inputGetSingleOrderSchema,
   inputRegistOrderSchema,
+  outputEditOrderStatus,
   outputGetMonthlyOrders,
   outputGetOrdersSchema,
   outputGetOrdersTodaySchema,
+  outputGetSingleOrderSchema,
 } from "../../schema/order.schema";
 
 export const orderRouter = t.router({
@@ -60,6 +64,28 @@ export const orderRouter = t.router({
       throw e;
     }
   }),
+  getSingle: t.procedure
+    .input(inputGetSingleOrderSchema)
+    .output(outputGetSingleOrderSchema)
+    .query(async ({ input }) => {
+      try {
+        const order = await prisma.order.findUnique({
+          where: { id: input.id },
+          include: {
+            products: true,
+          },
+        });
+        return order;
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
   getOrdersToday: t.procedure
     .output(outputGetOrdersTodaySchema)
     .query(async () => {
@@ -309,6 +335,30 @@ export const orderRouter = t.router({
         throw e;
       }
     }),
-  delete: t.procedure.mutation(async ({ input }) => {}),
-  edit: t.procedure.mutation(async ({ input }) => {}),
+  editOrderStatus: t.procedure
+    .input(inputEditOrderStatus)
+    .output(outputEditOrderStatus)
+    .mutation(async ({ input }) => {
+      try {
+        const order = await prisma.order.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            status: input.status,
+          },
+        });
+        return {
+          status: order.status,
+        };
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
 });

@@ -15,7 +15,7 @@ export const registProductSchema = z.object({
 });
 
 export const editProductSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   description: z.string(),
   discount: z.boolean(),
@@ -30,7 +30,7 @@ export const editProductSchema = z.object({
 });
 
 export const tableSingleProductSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   discount: z.boolean(),
   price: z.number(),
@@ -40,12 +40,16 @@ export const tableSingleProductSchema = z.object({
   discountRate: z.nullable(z.number()),
 });
 
-export const getSingleProductSchema = z.object({
+export const inputGetProductsByCategoryId = z.object({
   id: z.number(),
 });
 
+export const getSingleProductSchema = z.object({
+  id: z.string(),
+});
+
 export const deleteProductSchema = z.object({
-  id: z.number(),
+  id: z.string(),
 });
 
 export const outputTableProductsSchema = tableSingleProductSchema
@@ -54,7 +58,7 @@ export const outputTableProductsSchema = tableSingleProductSchema
 
 export const outputSingleProductSchema = z.nullable(
   z.object({
-    id: z.number(),
+    id: z.string(),
     title: z.string(),
     description: z.string(),
     discount: z.boolean(),
@@ -76,7 +80,7 @@ export const inputSearchByTitle = z.object({
 export const outputSearchByTitle = z.nullable(
   z
     .object({
-      id: z.number(),
+      id: z.string(),
       title: z.string(),
       discount: z.boolean(),
       discountRate: z.nullable(z.number()),
@@ -86,7 +90,12 @@ export const outputSearchByTitle = z.nullable(
     .array()
 );
 
+export const outputGetProductsByCategoryId = tableSingleProductSchema.array();
+
 export type TableSingleProduct = z.TypeOf<typeof tableSingleProductSchema>;
 export type TableProduct = z.TypeOf<typeof outputTableProductsSchema>;
 export type RegistProductInput = z.TypeOf<typeof registProductSchema>;
 export type EditProductInput = z.TypeOf<typeof editProductSchema>;
+export type OutputGetProductsByCategoryId = z.TypeOf<
+  typeof outputGetProductsByCategoryId
+>;

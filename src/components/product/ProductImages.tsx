@@ -1,4 +1,4 @@
-import { Skeleton } from "@chakra-ui/react";
+import { Box, Skeleton, Spacer } from "@chakra-ui/react";
 import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 
@@ -15,20 +15,23 @@ type ChildImagesProps = {
 const ChildImage: React.FC<ChildImagesProps> = ({ image, selected }) => {
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div className={`relative ${!selected && "opacity-50"}`}>
+    <Box
+      className={`relative ${!selected && "opacity-50"}`}
+      width="100px"
+      height="100px"
+    >
       <Skeleton
         ref={ref}
         className="absolute top-0 z-10"
-        width="100px"
-        height="100px"
+        width="100%"
+        height="100%"
       />
       <Image
         src={image ?? ""}
-        width={100}
-        height={100}
+        layout="fill"
         onLoadingComplete={() => ref.current?.remove()}
       />
-    </div>
+    </Box>
   );
 };
 
@@ -39,35 +42,38 @@ const ProductImages: React.FC<Props> = ({ thumbnail, images }) => {
     setSelectedImage(thumbnail);
   }, [thumbnail]);
   return (
-    <div className="relative">
-      {isImageLoading && (
-        <Skeleton
-          className="absolute top-0 z-10"
-          width="500px"
-          height="500px"
-        />
-      )}
-
-      <Image
-        src={selectedImage ?? ""}
-        width={500}
-        height={500}
-        onLoadingComplete={() => setIsImageLoading(false)}
-      />
-      <div className="flex gap-2">
-        {images?.map((image) => (
-          <div
+    <>
+      <Box className="relative" width="500px" height="500px">
+        {isImageLoading && (
+          <Skeleton
+            className="absolute top-0 z-10"
+            width="100%"
+            height="100%"
+          />
+        )}
+        {selectedImage && (
+          <Image
+            src={selectedImage}
+            layout="fill"
+            onLoadingComplete={() => setIsImageLoading(false)}
+          />
+        )}
+      </Box>
+      <Spacer h={4} />
+      <Box className="flex gap-2">
+        {images?.map((image, index) => (
+          <Box
+            key={index}
             className={`cursor-pointer`}
             onClick={() => {
-              setIsImageLoading(true);
               setSelectedImage(image);
             }}
           >
             <ChildImage image={image} selected={selectedImage === image} />
-          </div>
+          </Box>
         ))}
-      </div>
-    </div>
+      </Box>
+    </>
   );
 };
 
