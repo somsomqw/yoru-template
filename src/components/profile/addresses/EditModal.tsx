@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -16,6 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { trpc } from "../../../utils/trpc";
+import { FaLessThanEqual } from "react-icons/fa";
 
 type EditModalProps = {
   id: string;
@@ -34,6 +35,15 @@ const EditModal: React.FC<EditModalProps> = ({
 }) => {
   const toast = useToast();
   const { data } = trpc.address.getSingle.useQuery({ id: id });
+  const [toggleBtn, setToggleBtn] = useState(data?.isDefault);
+
+  const handleToggle = () => {
+    setToggleBtn(!toggleBtn);
+  };
+  useEffect(() => {
+    setToggleBtn(data?.isDefault);
+  }, [data?.isDefault]);
+
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const editInfo = {
@@ -44,14 +54,14 @@ const EditModal: React.FC<EditModalProps> = ({
       zipcode: String(e.target.zipcode.value) ?? "",
       address1: String(e.target.address1.value) ?? "",
       address2: String(e.target.address2.value) ?? "",
-      isDefault: Boolean(e.target.isDefault.value) ?? false,
+      isDefault: toggleBtn ?? false,
     };
     mutate(editInfo);
   };
   const { mutate } = trpc.address.edit.useMutation({
     onError: () => {
       toast({
-        title: "Failed delete.",
+        title: "Failed edit.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -59,7 +69,7 @@ const EditModal: React.FC<EditModalProps> = ({
     },
     onSuccess: () => {
       toast({
-        title: "Category deleted.",
+        title: "Address edited.",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -153,7 +163,12 @@ const EditModal: React.FC<EditModalProps> = ({
               </FormControl>
               <FormControl className="flex justify-between">
                 <FormLabel>set default address</FormLabel>
-                <Switch id="address-isDefault" name="isDefault" />
+                <Switch
+                  id="address-isDefault"
+                  name="isDefault"
+                  onChange={handleToggle}
+                  defaultChecked={toggleBtn ? true : false}
+                />
               </FormControl>
             </ModalBody>
             <ModalFooter>

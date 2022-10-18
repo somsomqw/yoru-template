@@ -30,7 +30,7 @@ const Addresses: React.FC<Props> = ({ email }) => {
             </Button>
             <AddModal isOpen={isOpen} onClose={onClose} email={email} />
           </div>
-          <div className="w-full flex gap-4">
+          <div className="w-full flex gap-4 flex-wrap">
             {data?.map((address) => (
               <AddressCard
                 refetch={refetch}

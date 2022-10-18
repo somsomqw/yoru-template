@@ -43,7 +43,7 @@ const AddressCard: React.FC<Props> = ({
   const [selected, setSelected] = useState<string>("");
 
   return (
-    <div className="w-1/2 cursor-pointer hover:bg-gray-100 bg-gray-50 rounded-mg ">
+    <div className="w-100 auto cursor-pointer hover:bg-gray-100 bg-gray-50 rounded-mg">
       <div className="flex">
         <Text className="text-lg pt-5 pl-5 pr-1">{nameKanji}</Text>
         <Text className="text-lg pt-5 pl-5 pr-1">{nameKana}</Text>

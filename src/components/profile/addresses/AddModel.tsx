@@ -28,6 +28,12 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, email }) => {
   const [zipcode, setZipcodeMain] = React.useState();
   const [address, setAddress] = React.useState();
 
+  const [toggleBtn, setToggleBtn] = React.useState(false);
+
+  const handleToggle = () => {
+    setToggleBtn(!toggleBtn);
+  };
+
   const updateZipcodeMain = async (e: any) => {
     setZipcodeMain(e.target.value);
     try {
@@ -59,7 +65,7 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, email }) => {
       zipcode: String(e.target.zipcode.value),
       address1: String(e.target.address1.value),
       address2: String(e.target.address2.value),
-      isDefault: Boolean(e.target.isDefault.value),
+      isDefault: toggleBtn,
     };
     mutate(registInfo);
   };
@@ -169,7 +175,11 @@ const AddModal: React.FC<Props> = ({ isOpen, onClose, email }) => {
             </FormControl>
             <FormControl className="flex justify-between">
               <FormLabel>set default address</FormLabel>
-              <Switch id="address-isDefault" name="isDefault" />
+              <Switch
+                id="address-isDefault"
+                name="isDefault"
+                onChange={handleToggle}
+              />
             </FormControl>
           </ModalBody>
           <ModalFooter>

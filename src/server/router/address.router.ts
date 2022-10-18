@@ -15,7 +15,7 @@ import { Prisma } from "@prisma/client";
 export const addressRouter = t.router({
   regist: t.procedure.input(registAddressSchema).mutation(async ({ input }) => {
     try {
-      console.log(input);
+      console.log("input----------" + input.isDefault);
       await prisma.address.create({
         data: {
           ...input,
@@ -91,6 +91,7 @@ export const addressRouter = t.router({
   }),
   edit: t.procedure.input(editAddressSchema).mutation(async ({ input }) => {
     try {
+      console.log("input----------" + input.isDefault);
       await prisma.address.update({
         where: {
           id: input.id,

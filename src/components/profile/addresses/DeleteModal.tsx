@@ -38,7 +38,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     },
     onSuccess: () => {
       toast({
-        title: "Category deleted.",
+        title: "Address deleted.",
         status: "success",
         duration: 5000,
         isClosable: true,
