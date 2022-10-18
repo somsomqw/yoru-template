@@ -4,8 +4,11 @@ import { prisma } from "../../utils/prisma";
 import { Prisma } from "@prisma/client";
 import {
   inputCheckAlreadyRegistedSchema,
+  inputGetProductReviewsByScore,
+  inputGetProductReviewsSchema,
   inputRegistReviewSchema,
   outputCheckAlreadyRegistedSchema,
+  outputGetProductReviewsSchema,
 } from "../../schema/review.schema";
 
 export const reviewRouter = t.router({
@@ -55,6 +58,63 @@ export const reviewRouter = t.router({
         return {
           isRegisted: false,
         };
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
+  getProductReviews: t.procedure
+    .input(inputGetProductReviewsSchema)
+    .output(outputGetProductReviewsSchema)
+    .query(async ({ input }) => {
+      try {
+        const product = await prisma.product.findUnique({
+          where: { id: input.id },
+          include: {
+            reviews: true,
+          },
+        });
+
+        if (product) return product.reviews;
+        else return null;
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new trpc.TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "SYSTEM ERROR",
+          });
+        }
+        throw e;
+      }
+    }),
+  getProductReviewsByScore: t.procedure
+    .input(inputGetProductReviewsByScore)
+    .output(outputGetProductReviewsSchema)
+    .query(async ({ input }) => {
+      try {
+        const product = await prisma.product.findUnique({
+          where: {
+            id: input.id,
+          },
+          include: {
+            reviews: true,
+          },
+        });
+        if (!product) return null;
+        else {
+          if (input.score === -1) {
+            return product.reviews;
+          } else {
+            return product.reviews.filter(
+              (review) => review.score === input.score
+            );
+          }
+        }
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           throw new trpc.TRPCError({

@@ -19,11 +19,11 @@ const Cart: React.FC<Props> = ({ cartId }) => {
   }, [data]);
 
   return (
-    <div className="p-10">
+    <div className="laptop:p-10 mobile:pt-10">
       <Text className="text-3xl font-bold">Cart</Text>
       <Spacer h={10} />
       <CartDataTable carts={carts} refetch={refetch} />
-      <div className="flex justify-end pr-10">
+      <div className="flex justify-end laptop:pr-10">
         <Link
           href={{
             pathname: "/order",
@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async (
     return {
       redirect: {
         permanent: false,
-        destination: "/",
+        destination: "/authority",
       },
       props: {},
     };

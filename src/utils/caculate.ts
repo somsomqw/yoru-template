@@ -56,3 +56,24 @@ export const passwordSecurityCheck = (
     return "weak";
   }
 };
+
+export const getAverageScore = (scores: number[]): number => {
+  const totalScore = scores.reduce((prev, curr) => prev + curr, 0);
+  if (totalScore === 0) {
+    return 0;
+  } else {
+    return totalScore / scores.length;
+  }
+};
+
+export const getScorePercentage = (
+  scores: number[],
+  target: number
+): number => {
+  const totalTargetScore = scores.filter((score) => score === target);
+  if (totalTargetScore.length === 0) {
+    return 0;
+  } else {
+    return Math.floor((totalTargetScore.length / scores.length) * 100);
+  }
+};

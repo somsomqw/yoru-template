@@ -14,13 +14,27 @@ const CategoryDetail: React.FC<Props> = ({ id, name }) => {
   const { data } = trpc.product.getProductsByCategoryId.useQuery({
     id: Number(id),
   });
-  console.log(data);
+  if (data?.length === 0) {
+    return (
+      <div className="p-10 flex">
+        <div className="mobile:hidden">
+          <Category />
+        </div>
+        <div>
+          <Text className="text-3xl font-bold">{name}</Text>
+          <Text className="font-bold p-2">商品がありません。</Text>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="p-10 flex">
-      <Category />
+      <div className="mobile:hidden">
+        <Category />
+      </div>
       <div>
         <Text className="text-3xl font-bold">{name}</Text>
-        <div className="p-6 flex flex-wrap gap-4">
+        <div className="p-6 flex flex-wrap gap-4 mobile:justify-center">
           {data?.map((product) => (
             <ProductCard
               id={product.id}
